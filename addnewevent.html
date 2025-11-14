@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Add New Event - Smart School</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#7f13ec",
+              "background-light": "#f7f6f8",
+              "background-dark": "#191022",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
+<div class="relative flex min-h-screen w-full">
+<!-- SideNavBar -->
+<aside class="flex w-64 flex-col bg-[#4A148C] text-white">
+<div class="flex h-full flex-col justify-between p-4">
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-3 px-2 py-2">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Smart School Logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDQYFcuNqLsTknHVgjobDZHezcRpvDEJNCx6HEE498Aq4X-tpgdyBDo0Xas1yNiX4FPASY76rwaOk9uO3rFe6cWHdosCm_8-h7cVY5Cpl-15-0rHd_4nBQ0GuL-Mu-PKn3lLUXyYBJEkA2_eQYLAFpjxOJW-g9a_LB3fOU7EnKDIvExF4QHoM0jY3AZ8umvsknGTx6p4s8JWLidZNJxuYGHO7bvUwcVVRAsh1sk9Vx6GyycT2Msr4LVeOPA_Epv15WRipgW6Wob69I");'></div>
+<div class="flex flex-col">
+<h1 class="text-white text-base font-medium leading-normal">Smart School</h1>
+<p class="text-gray-300 text-sm font-normal leading-normal">Event Management</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 mt-4">
+<a class="flex items-center gap-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-white/20 text-white" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">event</span>
+<p class="text-sm font-medium leading-normal">Events</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-lg" href="#">
+<span class="material-symbols-outlined">groups</span>
+<p class="text-sm font-medium leading-normal">Students</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-lg" href="#">
+<span class="material-symbols-outlined">work</span>
+<p class="text-sm font-medium leading-normal">Teachers</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-sm font-medium leading-normal">Settings</p>
+</a>
+</nav>
+</div>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-lg" href="#">
+<span class="material-symbols-outlined">help_center</span>
+<p class="text-sm font-medium leading-normal">Help Center</p>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 p-8 overflow-y-auto">
+<div class="mx-auto max-w-4xl">
+<!-- PageHeading -->
+<div class="mb-8">
+<p class="text-3xl font-black leading-tight tracking-[-0.033em] text-[#333333] dark:text-gray-100">Add New Event</p>
+</div>
+<!-- Form Container -->
+<div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8">
+<form class="space-y-6">
+<!-- Event Title -->
+<div>
+<label class="block text-sm font-medium text-[#333333] dark:text-gray-300 pb-2" for="event-title">Event Title</label>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#333333] dark:text-gray-200 focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#E0E0E0] dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-primary h-12 placeholder:text-gray-400 dark:placeholder:text-gray-500 px-4 text-base font-normal leading-normal" id="event-title" placeholder="e.g., Annual Science Fair" type="text"/>
+</div>
+<!-- Date and Time -->
+<div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
+<div>
+<label class="block text-sm font-medium text-[#333333] dark:text-gray-300 pb-2" for="event-date">Date</label>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#333333] dark:text-gray-200 focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#E0E0E0] dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-primary h-12 placeholder:text-gray-400 dark:placeholder:text-gray-500 px-4 text-base font-normal leading-normal" id="event-date" type="date"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-[#333333] dark:text-gray-300 pb-2" for="start-time">Start Time</label>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#333333] dark:text-gray-200 focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#E0E0E0] dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-primary h-12 placeholder:text-gray-400 dark:placeholder:text-gray-500 px-4 text-base font-normal leading-normal" id="start-time" type="time"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-[#333333] dark:text-gray-300 pb-2" for="end-time">End Time</label>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#333333] dark:text-gray-200 focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#E0E0E0] dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-primary h-12 placeholder:text-gray-400 dark:placeholder:text-gray-500 px-4 text-base font-normal leading-normal" id="end-time" type="time"/>
+</div>
+</div>
+<!-- Location -->
+<div>
+<label class="block text-sm font-medium text-[#333333] dark:text-gray-300 pb-2" for="location">Location</label>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#333333] dark:text-gray-200 focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#E0E0E0] dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-primary h-12 placeholder:text-gray-400 dark:placeholder:text-gray-500 px-4 text-base font-normal leading-normal" id="location" placeholder="e.g., Auditorium, Gym, or Virtual Link" type="text"/>
+</div>
+<!-- Event Description -->
+<div>
+<label class="block text-sm font-medium text-[#333333] dark:text-gray-300 pb-2" for="description">Event Description</label>
+<textarea class="form-textarea flex w-full min-w-0 flex-1 resize-y overflow-hidden rounded-lg text-[#333333] dark:text-gray-200 focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#E0E0E0] dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-primary placeholder:text-gray-400 dark:placeholder:text-gray-500 p-4 text-base font-normal leading-normal" id="description" placeholder="Provide a detailed description of the event..." rows="4"></textarea>
+</div>
+<!-- File Uploader -->
+<div>
+<label class="block text-sm font-medium text-[#333333] dark:text-gray-300 pb-2">Event Image / Flyer</label>
+<div class="mt-2 flex justify-center rounded-lg border border-dashed border-[#E0E0E0] dark:border-gray-600 px-6 py-10">
+<div class="text-center">
+<span class="material-symbols-outlined text-4xl text-gray-400">upload_file</span>
+<div class="mt-4 flex text-sm leading-6 text-gray-600 dark:text-gray-400">
+<label class="relative cursor-pointer rounded-md bg-white dark:bg-gray-800 font-semibold text-primary focus-within:outline-none focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 dark:focus-within:ring-offset-gray-800 hover:text-primary/80" for="file-upload">
+<span>Upload a file</span>
+<input class="sr-only" id="file-upload" name="file-upload" type="file"/>
+</label>
+<p class="pl-1">or drag and drop</p>
+</div>
+<p class="text-xs leading-5 text-gray-600 dark:text-gray-500">PNG, JPG, GIF up to 10MB</p>
+<p class="text-xs leading-5 text-gray-500">Recommended size: 1200x800px</p>
+</div>
+</div>
+</div>
+<!-- Button Group -->
+<div class="flex items-center justify-end gap-4 pt-4">
+<button class="rounded-lg px-6 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600" type="button">Cancel</button>
+<button class="rounded-lg bg-[#6A1B9A] px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#5a1682] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#6A1B9A]" type="submit">Save Event</button>
+</div>
+</form>
+</div>
+</div>
+</main>
+</div>
+</body></html>

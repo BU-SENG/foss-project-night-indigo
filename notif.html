@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Smart School - Notifications</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#7f13ec",
+            "background-light": "#f7f6f8",
+            "background-dark": "#191022",
+            "brand-purple": "#7F56D9",
+            "brand-light-purple": "#F4F3FF",
+            "brand-gray": "#667085",
+            "brand-off-black": "#101828",
+            "brand-green": "#12B76A",
+            "brand-red": "#F04438"
+          },
+          fontFamily: {
+            "display": ["Inter", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="flex h-full grow">
+<!-- SideNavBar Component -->
+<aside class="flex h-screen min-h-[700px] w-64 flex-col justify-between bg-[#191022] p-4 text-white sticky top-0">
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Smart School logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAsi6WWe4K3Kaa33u9QNkkdJ7Eoda7imDcfaIt2ggGxOVGGZNY_OZ01Dfd2c53OuLtLoKTtcQEJ8Ds5KgS9a0wvHB5bbWP1B0IPJrwHyfQ8UeVgg2A9VQOFu8y6dUDX0_0VIdzWUiLIrWRDMOjvwteFc0IA08qubYfKDaU-vNP8CEdwMQcztn2_jmfh2TGZeuYLqShUKRPwQK6di1rut81d93oUxmQkXqtN20i8apyhPaefiSAEp2mP9Tn3gTksGpTz_RuiWK5qlAw");'></div>
+<div class="flex flex-col">
+<h1 class="text-white text-base font-medium leading-normal">Smart School</h1>
+<p class="text-[#D0D5DD] text-sm font-normal leading-normal">Admin Panel</p>
+</div>
+</div>
+<div class="flex flex-col gap-2 mt-4">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-white/70 hover:bg-white/10 transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">dashboard</span>
+<p class="text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-white/70 hover:bg-white/10 transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">event</span>
+<p class="text-sm font-medium leading-normal">Events</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-white/70 hover:bg-white/10 transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">calendar_today</span>
+<p class="text-sm font-medium leading-normal">Calendar</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-brand-purple text-white" href="#">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">notifications</span>
+<p class="text-sm font-medium leading-normal">Notifications</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-white/70 hover:bg-white/10 transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">group</span>
+<p class="text-sm font-medium leading-normal">Students</p>
+</a>
+</div>
+</div>
+<div class="flex flex-col gap-4">
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-brand-purple text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-brand-purple/90 transition-colors">
+<span class="truncate">Create New Event</span>
+</button>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-white/70 hover:bg-white/10 transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">settings</span>
+<p class="text-sm font-medium leading-normal">Settings</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-white/70 hover:bg-white/10 transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">support</span>
+<p class="text-sm font-medium leading-normal">Support</p>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 bg-white dark:bg-gray-900">
+<div class="grid grid-cols-1 lg:grid-cols-12 h-full">
+<!-- Notifications List Column -->
+<div class="lg:col-span-5 xl:col-span-4 border-r border-gray-200 dark:border-gray-700 flex flex-col h-screen">
+<!-- PageHeading Component -->
+<div class="flex flex-wrap justify-between gap-3 p-6 border-b border-gray-200 dark:border-gray-700 items-center">
+<p class="text-brand-off-black dark:text-white text-2xl font-bold leading-tight tracking-[-0.03em] min-w-48">Notifications</p>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-9 px-3 bg-[#f2f0f4] dark:bg-gray-800 text-brand-off-black dark:text-white text-sm font-medium leading-normal hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+<span class="truncate">Mark all as read</span>
+</button>
+</div>
+<!-- SearchBar Component -->
+<div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+<label class="flex flex-col min-w-40 h-11 w-full">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+<div class="text-brand-gray flex bg-[#f2f0f4] dark:bg-gray-800 items-center justify-center pl-4 rounded-l-lg border-r-0">
+<span class="material-symbols-outlined text-2xl">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-brand-off-black dark:text-white focus:outline-0 focus:ring-2 focus:ring-brand-purple/50 border-none bg-[#f2f0f4] dark:bg-gray-800 focus:border-none h-full placeholder:text-brand-gray px-4 rounded-l-none border-l-0 pl-2 text-sm font-normal leading-normal" placeholder="Search notifications..." value=""/>
+</div>
+</label>
+</div>
+<!-- SegmentedButtons Component -->
+<div class="flex px-6 py-3 border-b border-gray-200 dark:border-gray-700">
+<div class="flex h-9 flex-1 items-center justify-center rounded-lg bg-[#f2f0f4] dark:bg-gray-800 p-1">
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 has-[:checked]:bg-white dark:has-[:checked]:bg-gray-700 has-[:checked]:shadow-[0_0_4px_rgba(0,0,0,0.1)] has-[:checked]:text-brand-off-black dark:has-[:checked]:text-white text-brand-gray text-sm font-medium leading-normal transition-all">
+<input checked="" class="invisible w-0" name="notification-filter" type="radio" value="All"/>
+<span class="truncate">All</span>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 has-[:checked]:bg-white dark:has-[:checked]:bg-gray-700 has-[:checked]:shadow-[0_0_4px_rgba(0,0,0,0.1)] has-[:checked]:text-brand-off-black dark:has-[:checked]:text-white text-brand-gray text-sm font-medium leading-normal transition-all">
+<input class="invisible w-0" name="notification-filter" type="radio" value="Unread"/>
+<span class="truncate">Unread</span>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 has-[:checked]:bg-white dark:has-[:checked]:bg-gray-700 has-[:checked]:shadow-[0_0_4px_rgba(0,0,0,0.1)] has-[:checked]:text-brand-off-black dark:has-[:checked]:text-white text-brand-gray text-sm font-medium leading-normal transition-all">
+<input class="invisible w-0" name="notification-filter" type="radio" value="Event Updates"/>
+<span class="truncate">Event Updates</span>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 has-[:checked]:bg-white dark:has-[:checked]:bg-gray-700 has-[:checked]:shadow-[0_0_4px_rgba(0,0,0,0.1)] has-[:checked]:text-brand-off-black dark:has-[:checked]:text-white text-brand-gray text-sm font-medium leading-normal transition-all">
+<input class="invisible w-0" name="notification-filter" type="radio" value="Reminders"/>
+<span class="truncate">Reminders</span>
+</label>
+</div>
+</div>
+<!-- Notification List -->
+<div class="flex-1 overflow-y-auto">
+<!-- Selected ListItem Component -->
+<div class="flex gap-4 bg-brand-light-purple dark:bg-brand-purple/20 px-4 py-4 justify-between cursor-pointer border-b border-gray-200 dark:border-gray-700">
+<div class="flex items-start gap-4">
+<div class="text-brand-purple dark:text-white flex items-center justify-center rounded-lg bg-white dark:bg-brand-purple/30 shrink-0 size-10">
+<span class="material-symbols-outlined">edit_calendar</span>
+</div>
+<div class="flex flex-1 flex-col justify-center">
+<p class="text-brand-off-black dark:text-white text-sm font-medium leading-normal">Science Fair Location Change</p>
+<p class="text-brand-gray dark:text-gray-400 text-sm font-normal leading-normal">The location for the upcoming Science Fair has been changed to the Main Auditorium.</p>
+</div>
+</div>
+<div class="flex flex-col items-end justify-between shrink-0">
+<p class="text-brand-gray dark:text-gray-400 text-xs font-normal leading-normal whitespace-nowrap">5m ago</p>
+<div class="size-2.5 rounded-full bg-brand-purple"></div>
+</div>
+</div>
+<!-- Unselected ListItem Component -->
+<div class="flex gap-4 bg-white dark:bg-gray-900 px-4 py-4 justify-between cursor-pointer border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+<div class="flex items-start gap-4">
+<div class="text-brand-off-black dark:text-white flex items-center justify-center rounded-lg bg-[#f2f0f4] dark:bg-gray-800 shrink-0 size-10">
+<span class="material-symbols-outlined">celebration</span>
+</div>
+<div class="flex flex-1 flex-col justify-center">
+<p class="text-brand-off-black dark:text-white text-sm font-medium leading-normal">New Event: Annual Sports Day</p>
+<p class="text-brand-gray dark:text-gray-400 text-sm font-normal leading-normal">Get ready for a day of fun and competition! The Annual Sports Day is scheduled for next month.</p>
+</div>
+</div>
+<div class="flex flex-col items-end justify-between shrink-0">
+<p class="text-brand-gray dark:text-gray-400 text-xs font-normal leading-normal whitespace-nowrap">2h ago</p>
+<div class="size-2.5 rounded-full bg-brand-purple"></div>
+</div>
+</div>
+<!-- Read ListItem Component -->
+<div class="flex gap-4 bg-white dark:bg-gray-900 px-4 py-4 justify-between cursor-pointer border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+<div class="flex items-start gap-4 opacity-60">
+<div class="text-brand-off-black dark:text-white flex items-center justify-center rounded-lg bg-[#f2f0f4] dark:bg-gray-800 shrink-0 size-10">
+<span class="material-symbols-outlined">campaign</span>
+</div>
+<div class="flex flex-1 flex-col justify-center">
+<p class="text-brand-off-black dark:text-white text-sm font-medium leading-normal">Reminder: School Assembly Tomorrow</p>
+<p class="text-brand-gray dark:text-gray-400 text-sm font-normal leading-normal">A special assembly will be held tomorrow morning at 9 AM in the main hall.</p>
+</div>
+</div>
+<div class="flex flex-col items-end justify-between shrink-0">
+<p class="text-brand-gray dark:text-gray-400 text-xs font-normal leading-normal whitespace-nowrap">Yesterday</p>
+</div>
+</div>
+<!-- Read ListItem Component -->
+<div class="flex gap-4 bg-white dark:bg-gray-900 px-4 py-4 justify-between cursor-pointer border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+<div class="flex items-start gap-4 opacity-60">
+<div class="text-brand-off-black dark:text-white flex items-center justify-center rounded-lg bg-[#f2f0f4] dark:bg-gray-800 shrink-0 size-10">
+<span class="material-symbols-outlined text-brand-red">warning</span>
+</div>
+<div class="flex flex-1 flex-col justify-center">
+<p class="text-brand-off-black dark:text-white text-sm font-medium leading-normal">Urgent: School Closure Notice</p>
+<p class="text-brand-gray dark:text-gray-400 text-sm font-normal leading-normal">Due to unforeseen circumstances, the school will remain closed on Friday, Oct 27th.</p>
+</div>
+</div>
+<div class="flex flex-col items-end justify-between shrink-0">
+<p class="text-brand-gray dark:text-gray-400 text-xs font-normal leading-normal whitespace-nowrap">2 days ago</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Notification Detail View Column -->
+<div class="lg:col-span-7 xl:col-span-8 p-8 md:p-12 hidden lg:flex flex-col">
+<div class="flex flex-col gap-8">
+<div class="flex justify-between items-start">
+<div class="flex flex-col gap-3">
+<p class="text-brand-purple text-sm font-semibold">Event Update</p>
+<h2 class="text-brand-off-black dark:text-white text-3xl font-bold tracking-tight">Science Fair Location Change</h2>
+<p class="text-brand-gray dark:text-gray-400 text-base">Posted 5 minutes ago</p>
+</div>
+<button class="flex items-center justify-center size-10 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-brand-gray dark:text-gray-400 transition-colors">
+<span class="material-symbols-outlined text-2xl">archive</span>
+</button>
+</div>
+<div class="w-full h-px bg-gray-200 dark:bg-gray-700"></div>
+<div class="prose prose-lg text-brand-gray dark:text-gray-300 max-w-none">
+<p>Hello students and parents,</p>
+<p>Please note that the location for the upcoming Annual Science Fair has been changed. The event will now take place in the <strong>Main Auditorium</strong> to accommodate a larger audience and more exhibits.</p>
+<p>The date and time remain unchanged: <br/><strong>Date:</strong> November 15, 2023 <br/><strong>Time:</strong> 10:00 AM - 4:00 PM</p>
+<p>We apologize for any inconvenience this may cause and look forward to seeing you there!</p>
+</div>
+<div class="flex items-center gap-4 pt-4">
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-11 px-5 bg-white dark:bg-gray-800 text-brand-off-black dark:text-white text-sm font-bold leading-normal border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+<span class="material-symbols-outlined text-xl">done</span>
+<span class="truncate">Mark as Read</span>
+</button>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-11 px-5 bg-brand-purple text-white text-sm font-bold leading-normal hover:bg-brand-purple/90 transition-colors">
+<span class="truncate">View Event Details</span>
+<span class="material-symbols-outlined text-xl">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Empty State Example -->
+<!-- <div class="flex flex-col items-center justify-center h-full text-center">
+                <div class="flex items-center justify-center size-14 rounded-full bg-brand-light-purple dark:bg-brand-purple/20 text-brand-purple dark:text-white mb-5">
+                    <span class="material-symbols-outlined text-4xl">notifications</span>
+                </div>
+                <h3 class="text-brand-off-black dark:text-white text-lg font-semibold mb-1">No notification selected</h3>
+                <p class="text-brand-gray dark:text-gray-400 text-sm max-w-xs">Select a notification from the list to see the details here.</p>
+            </div> -->
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>
