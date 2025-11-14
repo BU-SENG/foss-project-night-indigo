@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Smart School - Reports &amp; Analytics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#6A0DAD",
+            "background-light": "#FFFFFF",
+            "background-dark": "#1F2937",
+            "sidebar-dark": "#301934",
+            "secondary-background-light": "#F8F9FA",
+            "secondary-background-dark": "#374151",
+            "text-primary-light": "#212529",
+            "text-primary-dark": "#F9FAFB",
+            "text-secondary-light": "#6C757D",
+            "text-secondary-dark": "#D1D5DB"
+          },
+          fontFamily: {
+            "display": ["Inter", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "0.75rem",
+            "xl": "1rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+    }
+  </style>
+</head>
+<body class="font-display">
+<div class="relative flex h-auto min-h-screen w-full flex-col bg-secondary-background-light dark:bg-background-dark group/design-root overflow-x-hidden">
+<div class="flex min-h-screen">
+<!-- SideNavBar -->
+<div class="flex flex-col justify-between bg-sidebar-dark p-4 w-64">
+<div class="flex flex-col gap-4">
+<div class="flex gap-3 items-center">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="School logo placeholder" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDrT_EYxg1JUj9Ny-4gD1e7-wrkAL_GESdMbYvBHAE1CxZKzFxvGLknHNgcdrBlMzRMYPzzjub9vbtCh0xlNpy0CL3g4kvqA8K1BSvIrgkNQ1dF74c9G04mzJ85xnF-ICHTmePkrX47q3aGkiGgqE7zThRmemyl6K8atiQyOccPgSgR7cqI9cFOdwIEv0rQ9wmpRgW0YXb4HUjczuN12dIwEmBk8Im_er6R_7MmEa7UKLznThsDqb366dlmGVvFYThRUB4PNDEtYdM");'></div>
+<div class="flex flex-col">
+<h1 class="text-white text-base font-medium leading-normal">Admin</h1>
+<p class="text-gray-400 text-sm font-normal leading-normal">Smart School</p>
+</div>
+</div>
+<div class="flex flex-col gap-2 mt-4">
+<a class="flex items-center gap-3 px-3 py-2 text-gray-300 hover:bg-primary/30 hover:text-white rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-300 hover:bg-primary/30 hover:text-white rounded-lg" href="#">
+<span class="material-symbols-outlined">event</span>
+<p class="text-sm font-medium leading-normal">Events</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/40 text-white" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<p class="text-sm font-medium leading-normal">Reports</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-300 hover:bg-primary/30 hover:text-white rounded-lg" href="#">
+<span class="material-symbols-outlined">group</span>
+<p class="text-sm font-medium leading-normal">Students</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-300 hover:bg-primary/30 hover:text-white rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-sm font-medium leading-normal">Settings</p>
+</a>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 text-gray-300 hover:bg-primary/30 hover:text-white rounded-lg" href="#">
+<span class="material-symbols-outlined">help_center</span>
+<p class="text-sm font-medium leading-normal">Help Center</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-300 hover:bg-primary/30 hover:text-white rounded-lg" href="#">
+<span class="material-symbols-outlined">logout</span>
+<p class="text-sm font-medium leading-normal">Log Out</p>
+</a>
+</div>
+</div>
+<!-- Main Content -->
+<main class="flex-1 p-8">
+<div class="max-w-7xl mx-auto">
+<!-- PageHeading -->
+<div class="flex flex-wrap justify-between gap-3 p-4">
+<h1 class="text-text-primary-light dark:text-text-primary-dark text-4xl font-black leading-tight tracking-tight min-w-72">Reports &amp; Analytics</h1>
+</div>
+<!-- Filter Section -->
+<div class="bg-background-light dark:bg-secondary-background-dark p-6 rounded-lg shadow-sm mb-8">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-end">
+<!-- Report Type Dropdown -->
+<label class="flex flex-col w-full">
+<p class="text-text-primary-light dark:text-text-primary-dark text-sm font-medium leading-normal pb-2">Report Type</p>
+<select class="form-select flex w-full min-w-0 resize-none overflow-hidden rounded-lg text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 dark:border-gray-600 bg-background-light dark:bg-background-dark focus:border-primary h-12 placeholder:text-text-secondary-light px-3 text-base font-normal leading-normal">
+<option>Attendance Summary</option>
+<option>Event Popularity</option>
+<option>Participation by Grade</option>
+</select>
+</label>
+<!-- Event Category Dropdown -->
+<label class="flex flex-col w-full">
+<p class="text-text-primary-light dark:text-text-primary-dark text-sm font-medium leading-normal pb-2">Event Category</p>
+<select class="form-select flex w-full min-w-0 resize-none overflow-hidden rounded-lg text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 dark:border-gray-600 bg-background-light dark:bg-background-dark focus:border-primary h-12 placeholder:text-text-secondary-light px-3 text-base font-normal leading-normal">
+<option>All Categories</option>
+<option>Sports</option>
+<option>Academics</option>
+<option>Arts &amp; Culture</option>
+</select>
+</label>
+<!-- Date Range Dropdown -->
+<label class="flex flex-col w-full">
+<p class="text-text-primary-light dark:text-text-primary-dark text-sm font-medium leading-normal pb-2">Filter by Date</p>
+<select class="form-select flex w-full min-w-0 resize-none overflow-hidden rounded-lg text-text-primary-light dark:text-text-primary-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 dark:border-gray-600 bg-background-light dark:bg-background-dark focus:border-primary h-12 placeholder:text-text-secondary-light px-3 text-base font-normal leading-normal">
+<option>Last 30 Days</option>
+<option>This Month</option>
+<option>Last Month</option>
+<option>Custom Range</option>
+</select>
+</label>
+<!-- ButtonGroup -->
+<div class="flex gap-3">
+<button class="flex-1 min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-wide hover:bg-primary/90 transition-colors">
+<span class="truncate">Generate Report</span>
+</button>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-4 bg-secondary-background-light dark:bg-secondary-background-dark text-text-primary-light dark:text-text-primary-dark text-sm font-bold leading-normal tracking-wide border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+<span class="truncate">Export</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Data Visualization Widgets -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+<div class="bg-background-light dark:bg-secondary-background-dark p-6 rounded-lg shadow-sm flex items-start gap-4">
+<div class="bg-primary/20 text-primary p-3 rounded-full">
+<span class="material-symbols-outlined text-3xl">groups</span>
+</div>
+<div>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm font-medium">Total Attendance this Month</p>
+<p class="text-text-primary-light dark:text-text-primary-dark text-4xl font-bold">1,428</p>
+</div>
+</div>
+<div class="bg-background-light dark:bg-secondary-background-dark p-6 rounded-lg shadow-sm flex items-start gap-4">
+<div class="bg-primary/20 text-primary p-3 rounded-full">
+<span class="material-symbols-outlined text-3xl">emoji_events</span>
+</div>
+<div>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm font-medium">Most Popular Event</p>
+<p class="text-text-primary-light dark:text-text-primary-dark text-2xl font-bold">Annual Sports Day</p>
+</div>
+</div>
+<div class="bg-background-light dark:bg-secondary-background-dark p-6 rounded-lg shadow-sm flex items-start gap-4">
+<div class="bg-primary/20 text-primary p-3 rounded-full">
+<span class="material-symbols-outlined text-3xl">percent</span>
+</div>
+<div>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm font-medium">Average Participation Rate</p>
+<p class="text-text-primary-light dark:text-text-primary-dark text-4xl font-bold">82%</p>
+</div>
+</div>
+</div>
+<!-- Data Table -->
+<div class="bg-background-light dark:bg-secondary-background-dark rounded-lg shadow-sm overflow-hidden">
+<div class="p-6">
+<h3 class="text-xl font-bold text-text-primary-light dark:text-text-primary-dark">Detailed Event Report</h3>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-secondary-background-light dark:bg-background-dark">
+<tr>
+<th class="p-4 text-sm font-bold text-text-secondary-light dark:text-text-secondary-dark tracking-wider">EVENT NAME</th>
+<th class="p-4 text-sm font-bold text-text-secondary-light dark:text-text-secondary-dark tracking-wider">DATE</th>
+<th class="p-4 text-sm font-bold text-text-secondary-light dark:text-text-secondary-dark tracking-wider">ORGANIZER</th>
+<th class="p-4 text-sm font-bold text-text-secondary-light dark:text-text-secondary-dark tracking-wider">CATEGORY</th>
+<th class="p-4 text-sm font-bold text-text-secondary-light dark:text-text-secondary-dark tracking-wider text-right">ATTENDEES</th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-t border-gray-200 dark:border-gray-700">
+<td class="p-4 text-text-primary-light dark:text-text-primary-dark font-medium">Annual Sports Day</td>
+<td class="p-4 text-text-secondary-light dark:text-text-secondary-dark">Oct 15, 2024</td>
+<td class="p-4 text-text-secondary-light dark:text-text-secondary-dark">Mr. John Smith</td>
+<td class="p-4 text-text-secondary-light dark:text-text-secondary-dark">Sports</td>
+<td class="p-4 text-text-primary-light dark:text-text-primary-dark font-medium text-right">250</td>
+</tr>
+<tr class="bg-secondary-background-light dark:bg-background-dark border-t border-gray-200 dark:border-gray-700">
+<td class="p-4 text-text-primary-light dark:text-text-primary-dark font-medium">Science Fair</td>
+<td class="p-4 text-text-secondary-light dark:text-text-secondary-dark">Oct 12, 2024</td>
+<td class="p-4 text-text-secondary-light dark:text-text-secondary-dark">Ms. Emily White</td>
+<td class="p-4 text-text-secondary-light dark:text-text-secondary-dark">Academics</td>
+<td class="p-4 text-text-primary-light dark:text-text-primary-dark font-medium text-right">120</td>
+</tr>
+<tr class="border-t border-gray-200 dark:border-gray-700">
+<td class="p-4 text-text-primary-light dark:text-text-primary-dark font-medium">Drama Club Performance</td>
+<td class="p-4 text-text-secondary-light dark:text-text-secondary-dark">Oct 10, 2024</td>
+<td class="p-4 text-text-secondary-light dark:text-text-secondary-dark">Mrs. Davis</td>
+<td class="p-4 text-text-secondary-light dark:text-text-secondary-dark">Arts &amp; Culture</td>
+<td class="p-4 text-text-primary-light dark:text-text-primary-dark font-medium text-right">85</td>
+</tr>
+<tr class="bg-secondary-background-light dark:bg-background-dark border-t border-gray-200 dark:border-gray-700">
+<td class="p-4 text-text-primary-light dark:text-text-primary-dark font-medium">Inter-School Debate</td>
+<td class="p-4 text-text-secondary-light dark:text-text-secondary-dark">Oct 05, 2024</td>
+<td class="p-4 text-text-secondary-light dark:text-text-secondary-dark">Mr. Robert Brown</td>
+<td class="p-4 text-text-secondary-light dark:text-text-secondary-dark">Academics</td>
+<td class="p-4 text-text-primary-light dark:text-text-primary-dark font-medium text-right">64</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="flex justify-between items-center p-4 border-t border-gray-200 dark:border-gray-700">
+<p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Showing 1 to 4 of 25 results</p>
+<div class="flex gap-2">
+<button class="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm text-text-primary-light dark:text-text-primary-dark hover:bg-gray-100 dark:hover:bg-gray-700">Previous</button>
+<button class="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm text-text-primary-light dark:text-text-primary-dark hover:bg-gray-100 dark:hover:bg-gray-700">Next</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

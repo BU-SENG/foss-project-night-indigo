@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Settings - Smart School Event Management System</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#6A0DAD",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191022",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1rem",
+                        "full": "9999px",
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="flex min-h-screen">
+<!-- SideNavBar -->
+<aside class="flex w-64 flex-col bg-[#191022] text-white p-4">
+<div class="flex h-full min-h-[700px] flex-col justify-between">
+<div class="flex flex-col gap-4">
+<div class="flex gap-3 items-center px-2 py-2">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User profile picture of Maria Rodriguez" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDIbZf1IJoXuSDoBWfvBXAxsLCiKe4DdoHujRWD_2-TkoMQsSEyHrxNC9hD5of--OiGABlei7R9n3VDtu24hZSlgMftIvoZhW-SoFqkZ4FMS_Xux62KRGuCFrPsyxZpqU3MN6VKpz0hDrMSwMHBhb36ibHS7eYh-x-3Pjs6pGp4IdcVDPFg3bX8QZ9jkrtT-u1NVz26L3NDu1hZfLlDaC_nbVfkMnxg_O1NTMWZwe5sXOmVX1X3zaevLhtiwVuC5gqA_h8IiH9UMwk");'></div>
+<div class="flex flex-col">
+<h1 class="text-white text-base font-medium leading-normal">Maria Rodriguez</h1>
+<p class="text-gray-400 text-sm font-normal leading-normal">School Administrator</p>
+</div>
+</div>
+<div class="flex flex-col gap-2 mt-6">
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-white/10">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm font-medium leading-normal">Dashboard</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-white/10">
+<span class="material-symbols-outlined">event</span>
+<p class="text-sm font-medium leading-normal">Events</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-white/10">
+<span class="material-symbols-outlined">calendar_month</span>
+<p class="text-sm font-medium leading-normal">Calendar</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/30">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
+<p class="text-white text-sm font-medium leading-normal">Settings</p>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-4">
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90">
+<span class="truncate">Create New Event</span>
+</button>
+<div class="flex flex-col gap-1 border-t border-white/10 pt-4">
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-white/10">
+<span class="material-symbols-outlined">help_outline</span>
+<p class="text-sm font-medium leading-normal">Help</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-white/10">
+<span class="material-symbols-outlined">logout</span>
+<p class="text-sm font-medium leading-normal">Logout</p>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 p-8">
+<div class="w-full max-w-4xl mx-auto">
+<!-- PageHeading -->
+<div class="flex flex-wrap justify-between gap-3 mb-6">
+<p class="text-[#333333] dark:text-gray-200 text-4xl font-black leading-tight tracking-[-0.033em] min-w-72">Settings</p>
+</div>
+<!-- Main Container Card -->
+<div class="bg-white dark:bg-background-dark/80 rounded-xl shadow-sm overflow-hidden">
+<!-- Tabs -->
+<div class="pb-3">
+<div class="flex border-b border-[#E0E0E0] dark:border-white/10 px-8 gap-8">
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-primary pb-[13px] pt-4" href="#">
+<p class="text-primary text-sm font-bold leading-normal tracking-[0.015em]">Personal Information</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-gray-500 dark:text-gray-400 pb-[13px] pt-4 hover:text-primary dark:hover:text-primary/80" href="#">
+<p class="text-sm font-bold leading-normal tracking-[0.015em]">Notifications</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-gray-500 dark:text-gray-400 pb-[13px] pt-4 hover:text-primary dark:hover:text-primary/80" href="#">
+<p class="text-sm font-bold leading-normal tracking-[0.015em]">Security</p>
+</a>
+</div>
+</div>
+<!-- Personal Information Section -->
+<div class="p-8 space-y-8">
+<!-- ProfileHeader -->
+<div class="flex p-4 @container border-b border-[#E0E0E0] dark:border-white/10 pb-8">
+<div class="flex w-full flex-col gap-4 @[520px]:flex-row @[520px]:justify-between @[520px]:items-center">
+<div class="flex gap-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-24 w-24" data-alt="Current profile picture of Maria Rodriguez" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA0u1LAdaXusQHflfomdncgyxVDjXcJCDRi73IB9P7QqEgyl-0GWXr6WiW-Sf4cWT21PS2GR3s2QocGskXbpO2NMR-V4cp96JepfW0qTK6LhZcp1fBAR-NaOUtuTPhCL0nuqVJzJMmTFyFCJK8jcmBXuZyDKyE6nEgw2GCRZKkOja4no0y05OUxd6fP_rb18WeZQoSV2pWSgJyV0opv8VvH4teGSRlS1NgEo8oTCLbwxWTvo5HVXxHHI3kQybKnKJcktGXhlfIAxuo");'></div>
+<div class="flex flex-col justify-center">
+<p class="text-[#333333] dark:text-gray-200 text-[22px] font-bold leading-tight tracking-[-0.015em]">Profile Picture</p>
+<p class="text-gray-500 dark:text-gray-400 text-base font-normal leading-normal">Update your profile picture.</p>
+</div>
+</div>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#E9D8FD] text-primary text-sm font-bold leading-normal tracking-[0.015em] w-full max-w-[480px] @[480px]:w-auto hover:bg-primary/20">
+<span class="truncate">Upload New</span>
+</button>
+</div>
+</div>
+<!-- TextField -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 px-4">
+<label class="flex flex-col">
+<p class="text-[#333333] dark:text-gray-200 text-base font-medium leading-normal pb-2">Full Name</p>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#333333] dark:text-gray-200 focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#E0E0E0] dark:border-white/20 bg-white dark:bg-background-dark h-12 placeholder:text-gray-400 p-3 text-base font-normal leading-normal" value="Maria Rodriguez"/>
+</label>
+<label class="flex flex-col">
+<p class="text-[#333333] dark:text-gray-200 text-base font-medium leading-normal pb-2">Email Address</p>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-gray-500 dark:text-gray-400 focus:outline-0 focus:ring-0 border border-[#E0E0E0] dark:border-white/20 bg-gray-100 dark:bg-background-dark/50 h-12 p-3 text-base font-normal leading-normal cursor-not-allowed" readonly="" value="maria.rodriguez@school.edu"/>
+</label>
+<label class="flex flex-col">
+<p class="text-[#333333] dark:text-gray-200 text-base font-medium leading-normal pb-2">Phone Number</p>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#333333] dark:text-gray-200 focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#E0E0E0] dark:border-white/20 bg-white dark:bg-background-dark h-12 placeholder:text-gray-400 p-3 text-base font-normal leading-normal" placeholder="(123) 456-7890"/>
+</label>
+</div>
+<!-- Action Buttons -->
+<div class="flex justify-end gap-3 px-4 pt-4 border-t border-[#E0E0E0] dark:border-white/10">
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-transparent text-gray-600 dark:text-gray-300 border border-[#E0E0E0] dark:border-white/20 text-sm font-bold leading-normal tracking-[0.015em] hover:bg-gray-100 dark:hover:bg-white/10">
+<span class="truncate">Cancel</span>
+</button>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90">
+<span class="truncate">Save Changes</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>
