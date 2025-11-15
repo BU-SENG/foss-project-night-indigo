@@ -1,0 +1,167 @@
+/* ============================================
+   DESIGN SYSTEM: TYPOGRAPHY
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Material+Symbols+Outlined:opsz@20..48&display=swap');
+
+/* FONT FAMILY DEFINITIONS */
+:root {
+  /* Primary font for UI */
+  --font-display: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-base: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Monaco', 'Courier New', monospace;
+
+  /* Material Design Icons */
+  --icon-font: 'Material Symbols Outlined', sans-serif;
+}
+
+/* FONT SIZES - SCALE */
+:root {
+  /* Small sizes */
+  --text-xs: 12px;
+  --text-sm: 14px;
+
+  /* Base sizes */
+  --text-base: 16px;
+  --text-lg: 18px;
+
+  /* Headings */
+  --text-xl: 20px;
+  --text-2xl: 24px;
+  --text-3xl: 30px;
+  --text-4xl: 36px;
+  --text-5xl: 48px;
+  --text-6xl: 60px;
+
+  /* Display */
+  --text-display: 72px;
+}
+
+/* FONT WEIGHTS */
+:root {
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --fw-extrabold: 800;
+  --fw-black: 900;
+}
+
+/* LINE HEIGHTS */
+:root {
+  --lh-tight: 1.1;
+  --lh-normal: 1.5;
+  --lh-relaxed: 1.6;
+  --lh-loose: 1.75;
+}
+
+/* LETTER SPACING */
+:root {
+  --ls-tight: -0.015em;
+  --ls-normal: 0em;
+  --ls-wide: 0.015em;
+  --ls-wider: 0.025em;
+}
+
+/* TYPOGRAPHY CLASSES */
+
+/* Display Heading */
+h1, .h1 {
+  font-family: var(--font-display);
+  font-size: var(--text-6xl);
+  font-weight: var(--fw-black);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-tight);
+  color: var(--text-primary);
+}
+
+@media (max-width: 768px) {
+  h1, .h1 {
+    font-size: var(--text-5xl);
+  }
+}
+
+@media (max-width: 480px) {
+  h1, .h1 {
+    font-size: var(--text-4xl);
+  }
+}
+
+/* Heading 2 */
+h2, .h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-4xl);
+  font-weight: var(--fw-black);
+  line-height: var(--lh-tight);
+  color: var(--text-primary);
+}
+
+@media (max-width: 768px) {
+  h2, .h2 {
+    font-size: var(--text-3xl);
+  }
+}
+
+/* Heading 3 */
+h3, .h3 {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-tight);
+  color: var(--text-primary);
+}
+
+/* Heading 4 */
+h4, .h4 {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-normal);
+  color: var(--text-primary);
+}
+
+/* Body Text */
+p, .body {
+  font-family: var(--font-base);
+  font-size: var(--text-base);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-relaxed);
+  color: var(--text-primary);
+}
+
+.body-sm {
+  font-size: var(--text-sm);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-normal);
+}
+
+.body-lg {
+  font-size: var(--text-lg);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-relaxed);
+}
+
+/* Label */
+label, .label {
+  font-family: var(--font-base);
+  font-size: var(--text-sm);
+  font-weight: var(--fw-medium);
+  color: var(--text-primary);
+}
+
+/* Caption */
+.caption {
+  font-size: var(--text-xs);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-tight);
+  color: var(--text-tertiary);
+}
+
+/* Material Symbols Icon Styling */
+.material-symbols-outlined {
+  font-family: var(--icon-font);
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  display: inline-block;
+  font-size: inherit;
+  vertical-align: middle;
+}

@@ -1,0 +1,129 @@
+.container {
+  padding: var(--spacing-8);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  margin-bottom: var(--spacing-8);
+}
+
+.title {
+  font-size: var(--text-4xl);
+  font-weight: var(--fw-black);
+  color: var(--text-primary);
+  margin: 0;
+  line-height: var(--lh-tight);
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  margin: 0;
+  font-size: var(--text-base);
+  line-height: var(--lh-normal);
+}
+
+.settingsContainer {
+  background-color: var(--bg-white);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+  overflow: hidden;
+}
+
+.tabsContainer {
+  display: flex;
+  border-bottom: 1px solid var(--border-light);
+  padding: 0 var(--spacing-6);
+  gap: var(--spacing-6);
+  overflow-x: auto;
+}
+
+.tab {
+  padding: var(--spacing-4) 0;
+  border-bottom: 2px solid transparent;
+  font-weight: var(--fw-medium);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 200ms ease;
+  white-space: nowrap;
+}
+
+.tab.active {
+  border-bottom-color: var(--accent-purple);
+  color: var(--text-primary);
+}
+
+.settingsSection {
+  padding: var(--spacing-6);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.settingsSection:last-child {
+  border-bottom: none;
+}
+
+.sectionTitle {
+  font-size: var(--text-lg);
+  font-weight: var(--fw-bold);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-4);
+}
+
+.settingItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-4);
+  padding: var(--spacing-3) 0;
+}
+
+.settingLabel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  flex: 1;
+}
+
+.settingName {
+  font-weight: var(--fw-medium);
+  color: var(--text-primary);
+  font-size: var(--text-base);
+}
+
+.settingDescription {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.settingControl {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.settingField {
+  padding: var(--spacing-3) var(--spacing-3);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-base);
+  color: var(--text-primary);
+  background-color: var(--bg-white);
+}
+
+.settingField:focus {
+  outline: none;
+  border-color: var(--accent-purple);
+  box-shadow: 0 0 0 3px rgba(127, 19, 236, 0.1);
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: var(--spacing-12);
+  }
+
+  .settingItem {
+    padding: var(--spacing-4) 0;
+  }
+}

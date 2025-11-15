@@ -1,0 +1,116 @@
+/* ============================================
+   DESIGN SYSTEM IMPORTS
+   ============================================ */
+
+@import './styles/variables.css';
+@import './styles/typography.css';
+@import './styles/spacing.css';
+@import './styles/components.css';
+@import './styles/breakpoints.css';
+
+/* ============================================
+   GLOBAL STYLES & RESETS
+   ============================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-base);
+  font-size: var(--text-base);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-relaxed);
+  color: var(--text-primary);
+  background-color: var(--bg-white);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* HEADINGS */
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  padding: 0;
+}
+
+/* LINKS */
+
+a {
+  color: var(--primary-purple);
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+
+a:hover {
+  color: var(--primary-purple-dark);
+}
+
+a:active {
+  color: var(--primary-purple-dark);
+}
+
+/* BUTTONS */
+
+button {
+  font-family: var(--font-base);
+  font-size: inherit;
+  border: none;
+  background: none;
+}
+
+/* FORMS */
+
+input,
+textarea,
+select {
+  font-family: var(--font-base);
+}
+
+textarea {
+  font-family: var(--font-base);
+}
+
+/* IMAGES */
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* LISTS */
+
+ul, ol {
+  list-style: none;
+}
+
+/* CODE */
+
+code,
+pre {
+  font-family: var(--font-mono);
+  background-color: var(--bg-lighter);
+  border-radius: var(--radius-sm);
+  padding: 2px 6px;
+}
+
+pre {
+  padding: var(--spacing-4);
+  overflow-x: auto;
+}
