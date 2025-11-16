@@ -73,12 +73,17 @@ router.put("/:id", upload.single("file-upload"), async (req, res) => {
 
 // DELETE /events/:id - delete event
 router.delete("/:id", async (req, res) => {
+   console.log("💥 DELETE request received for ID:", req.params.id);
   try {
-    await Event.findByIdAndDelete(req.params.id);
-    res.json({ message: "Event deleted" });
+    const { id } = req.params;
+    const deletedEvent = await Event.findByIdAndDelete(id);
+    if (!deletedEvent) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+    res.json({ message: "Event deleted successfully" });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Failed to delete event" });
+    res.status(500).json({ message: "Failed to delete event" });
   }
 });
 
