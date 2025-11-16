@@ -9,9 +9,9 @@ const router = express.Router();
 // route to register user
 router.post("/register", async (req,res)=>{
     try{
-  const  {username, password, role,email } = req.body;
+  const  {username, password, role,email,phone } = req.body;
      const hashedPassword = await bcrypt.hash(password,10);
-     const newUser = new User({username, password:hashedPassword, role, email})
+     const newUser = new User({username, password:hashedPassword, role, email,phone})
          await newUser.save();
          res.status(201).json({message: `User registered successfully ${username}`});
   console.log("Successfully registered user" );
