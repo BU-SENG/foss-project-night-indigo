@@ -1,73 +1,128 @@
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
+import styles from './EditEventPage.module.css'; // new CSS module
 
 export default function EditEventPage() {
-  const { id } = useParams();
+  const { state } = useLocation();
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    title: '',
-    date: '',
-    startTime: '',
-    endTime: '',
-    location: '',
-    description: '',
-    file: null
-  });
+  const event = state?.event;
 
-  useEffect(() => {
-    const fetchEvent = async () => {
-      try {
-        const res = await fetch(`http://localhost:5000/events`);
-        const data = await res.json();
-        const event = data.data.find(e => e._id === id);
-        if (event) setFormData({ ...event, file: null });
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchEvent();
-  }, [id]);
+  const [title, setTitle] = useState(event?.title || '');
+  const [date, setDate] = useState(event?.date || '');
+  const [startTime, setStartTime] = useState(event?.startTime || '');
+  const [endTime, setEndTime] = useState(event?.endTime || '');
+  const [location, setLocation] = useState(event?.location || '');
+  const [description, setDescription] = useState(event?.description || '');
+  const [file, setFile] = useState(null);
 
-  const handleChange = e => {
-    const { name, value, files } = e.target;
-    setFormData(prev => ({ ...prev, [name]: files ? files[0] : value }));
-  };
-
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('date', date);
+    formData.append('startTime', startTime);
+    formData.append('endTime', endTime);
+    formData.append('location', location);
+    formData.append('description', description);
+    if (file) formData.append('file-upload', file);
+
     try {
-      const payload = new FormData();
-      Object.keys(formData).forEach(key => {
-        if (formData[key] !== null) payload.append(key, formData[key]);
+      const res = await fetch(`http://localhost:5000/events/${event._id}`, {
+        method: 'PUT',
+        body: formData,
       });
 
-      const res = await fetch(`http://localhost:5000/events/${id}`, {
-        method: 'PUT',
-        body: payload
-      });
       const result = await res.json();
-      alert(result.message);
+      alert(result.message || 'Event updated successfully');
       navigate('/events');
     } catch (err) {
       console.error(err);
-      alert("Failed to update event");
+      alert('Failed to update event');
     }
   };
 
   return (
     <Layout>
-      <h1>Edit Event</h1>
-      <form onSubmit={handleSubmit}>
-        <input name="title" value={formData.title} onChange={handleChange} placeholder="Title" required />
-        <input type="date" name="date" value={formData.date} onChange={handleChange} required />
-        <input type="time" name="startTime" value={formData.startTime} onChange={handleChange} required />
-        <input type="time" name="endTime" value={formData.endTime} onChange={handleChange} required />
-        <input name="location" value={formData.location} onChange={handleChange} placeholder="Location" required />
-        <textarea name="description" value={formData.description} onChange={handleChange} placeholder="Description" required />
-        <input type="file" name="file-upload" onChange={handleChange} />
-        <button type="submit">Update Event</button>
-      </form>
+      <div className={styles.container}>
+        <h1 className={styles.headerMain}>Edit Event</h1>
+        <form className={styles.form} onSubmit={handleSubmit}>
+          <label className={styles.label}>
+            Title
+            <input
+              className={styles.input}
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
+          </label>
+
+          <label className={styles.label}>
+            Date
+            <input
+              className={styles.input}
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              required
+            />
+          </label>
+
+          <label className={styles.label}>
+            Start Time
+            <input
+              className={styles.input}
+              type="time"
+              value={startTime}
+              onChange={(e) => setStartTime(e.target.value)}
+            />
+          </label>
+
+          <label className={styles.label}>
+            End Time
+            <input
+              className={styles.input}
+              type="time"
+              value={endTime}
+              onChange={(e) => setEndTime(e.target.value)}
+            />
+          </label>
+
+          <label className={styles.label}>
+            Location
+            <input
+              className={styles.input}
+              type="text"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+            />
+          </label>
+
+          <label className={styles.label}>
+            Description
+            <textarea
+              className={styles.textarea}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </label>
+
+          <label className={styles.label}>
+            File Upload
+            <input
+              className={styles.input}
+              type="file"
+              onChange={(e) => setFile(e.target.files[0])}
+            />
+          </label>
+
+          <button type="submit" className={styles.submitButton}>
+            Update Event
+          </button>
+        </form>
+      </div>
     </Layout>
   );
 }
