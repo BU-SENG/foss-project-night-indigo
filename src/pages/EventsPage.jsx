@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react'; 
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from "react-router-dom";
 import Layout from '../components/Layout';
 import styles from './EventsPage.module.css';
-import { Link, useNavigate } from "react-router-dom";
 
 export default function EventsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [eventFilter, setEventFilter] = useState('upcoming');
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // for programmatic navigation
 
   // Fetch events from backend
   useEffect(() => {
@@ -27,32 +27,37 @@ export default function EventsPage() {
       }
     };
     fetchEvents();
-  }, [eventFilter]); // refetch when filter changes
+  }, [eventFilter]);
 
   // Filter events by search term
   const filteredEvents = events.filter(event =>
     event.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Helper to determine status
+  // Determine event status
   const getStatus = (eventDate) => {
     const today = new Date();
     const eventDay = new Date(eventDate);
     return eventDay >= today ? 'upcoming' : 'past';
   };
 
-  // Delete an event
+  // Delete event
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this event?")) return;
     try {
       const res = await fetch(`http://localhost:5000/events/${id}`, { method: "DELETE" });
       const result = await res.json();
       alert(result.message);
-      setEvents(events.filter(e => e._id !== id));
+      setEvents(prev => prev.filter(e => e._id !== id));
     } catch (err) {
       console.error(err);
       alert("Failed to delete event");
     }
+  };
+
+  // Navigate to edit event page
+  const handleEdit = (event) => {
+    navigate('/edit-event', { state: { event } });
   };
 
   return (
@@ -145,18 +150,13 @@ export default function EventsPage() {
                   </div>
                 </div>
 
-                {/* Edit & Delete Buttons */}
+                {/* Action Buttons */}
                 <div className={styles.eventActions}>
-                  <Link to={`/edit-event/${event._id}`}>
-                    <button className={styles.actionButton}>
-                      <span className="material-symbols-outlined">edit</span>
-                    </button>
-                  </Link>
-                  <button
-                    className={styles.actionButton}
-                    onClick={() => handleDelete(event._id)}
-                  >
-                    <span className="material-symbols-outlined">delete</span>
+                  <button className={styles.actionButton} onClick={() => handleEdit(event)}>
+                    <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>edit</span>
+                  </button>
+                  <button className={styles.actionButton} onClick={() => handleDelete(event._id)}>
+                    <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>delete</span>
                   </button>
                 </div>
               </div>
