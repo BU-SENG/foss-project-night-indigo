@@ -5,59 +5,39 @@ import multer from "multer";
 import path from "path";
 
 const router = express.Router();
-
 console.log("🔥 EVENTS ROUTER FILE LOADED");
 
 // ----------------- MULTER CONFIG -----------------
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/"); // make sure this folder exists
-  },
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    cb(null, `${Date.now()}${ext}`);
-  },
+  destination: (req, file, cb) => cb(null, "uploads/"),
+  filename: (req, file, cb) => cb(null, `${Date.now()}${path.extname(file.originalname)}`),
 });
-
 const upload = multer({ storage });
 
 // ----------------- ROUTES -----------------
 
-// POST /events/addevents - handles form data + optional file upload
+// POST /events/addevents
 router.post("/addevents", upload.single("file-upload"), async (req, res) => {
   try {
     const { title, date, startTime, endTime, location, description } = req.body;
     const file = req.file;
 
-    const newEventData = {
-      title,
-      date,
-      startTime,
-      endTime,
-      location,
-      description,
+    const newEvent = new Event({
+      title, date, startTime, endTime, location, description,
       filePath: file ? file.path : null,
-    };
-
-    console.log("🔥 ROUTE HIT /addevents", newEventData);
-
-    const newEvent = new Event(newEventData);
-    await newEvent.save();
-
-    res.json({
-      message: "Event added successfully",
-      data: newEvent,
     });
+    await newEvent.save();
+    res.json({ message: "Event added successfully", data: newEvent });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to save event" });
   }
 });
 
-// GET /events - fetch all events
+// GET /events - all events
 router.get("/", async (req, res) => {
   try {
-    const events = await Event.find().sort({ createdAt: -1 });
+    const events = await Event.find().sort({ date: -1 });
     res.json({ data: events });
   } catch (err) {
     console.error(err);
@@ -65,5 +45,41 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Export router as default for ES modules
+// GET /events/upcoming - future events only
+router.get("/upcoming", async (req, res) => {
+  try {
+    const today = new Date();
+    const events = await Event.find({ date: { $gte: today.toISOString().split("T")[0] } }).sort({ date: 1 });
+    res.json({ data: events });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch upcoming events" });
+  }
+});
+
+// PUT /events/:id - update event
+router.put("/:id", upload.single("file-upload"), async (req, res) => {
+  try {
+    const updateData = { ...req.body };
+    if (req.file) updateData.filePath = req.file.path;
+
+    const updatedEvent = await Event.findByIdAndUpdate(req.params.id, updateData, { new: true });
+    res.json({ message: "Event updated", data: updatedEvent });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to update event" });
+  }
+});
+
+// DELETE /events/:id - delete event
+router.delete("/:id", async (req, res) => {
+  try {
+    await Event.findByIdAndDelete(req.params.id);
+    res.json({ message: "Event deleted" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to delete event" });
+  }
+});
+
 export default router;

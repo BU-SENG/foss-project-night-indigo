@@ -32,7 +32,7 @@ app.use(express.static(__dirname));
 app.use((req, res) => res.status(404).json({ error: "Route not found" }));
 
 // MongoDB connection
-const mongoURI = "Your MongoDB Connection String Here";
+const mongoURI = "Your mongoDB Connection String here";
 mongoose
   .connect(mongoURI)
   .then(() => console.log("✅ MongoDB Connected"))
