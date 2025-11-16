@@ -1,6 +1,10 @@
 import { useState } from 'react'
 import Layout from '../components/Layout'
 import styles from './EventsPage.module.css'
+import AddEventPage from './AddEventPage'
+import { Link } from "react-router-dom";
+
+
 
 export default function EventsPage() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -41,10 +45,14 @@ export default function EventsPage() {
             <h1 className={styles.headerMain}>School Events</h1>
             <p className={styles.headerSub}>Manage all upcoming and past school events.</p>
           </div>
-          <button className={styles.addButton}>
-            <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>add_circle</span>
-            <span>Add New Event</span>
-          </button>
+          
+          <Link to="/add-event">
+  <button className={styles.addButton}>
+    <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>add_circle</span>
+    <span>Add New Event</span>
+  </button>
+</Link>
+
         </div>
 
         <div className={styles.filters}>
