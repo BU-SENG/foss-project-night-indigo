@@ -6,6 +6,7 @@ import CalendarPage from './pages/CalendarPage'
 import ReportsPage from './pages/ReportsPage'
 import NotificationsPage from './pages/NotificationsPage'
 import SettingsPage from './pages/SettingsPage'
+import AddEventPage from './pages/AddEventPage'
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
         <Route path="/reports" element={<ReportsPage />} />
         <Route path="/notifications" element={<NotificationsPage />} />
         <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/add-event" element={<AddEventPage />} />  {/* ✅ Add this line */}
       </Routes>
     </Router>
   )

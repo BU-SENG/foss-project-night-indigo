@@ -1,0 +1,126 @@
+/* Container for the form */
+.formContainer {
+  max-width: 768px; /* max-w-4xl */
+  margin: 2rem auto;
+  background-color: #ffffff;
+  border-radius: 1rem; /* rounded-xl */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* shadow-sm */
+  padding: 2rem; /* p-8 */
+}
+
+/* Page heading */
+.pageTitle {
+  font-size: 2rem; /* text-3xl */
+  font-weight: 900; /* font-black */
+  line-height: 1.2;
+  letter-spacing: -0.033em;
+  color: #333333;
+  margin-bottom: 2rem;
+}
+
+/* Labels */
+.label {
+  display: block;
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* font-medium */
+  color: #333333;
+  padding-bottom: 0.5rem;
+}
+
+/* Input fields */
+.input,
+.textarea {
+  width: 100%;
+  min-width: 0;
+  border-radius: 0.5rem; /* rounded-lg */
+  border: 1px solid #e0e0e0;
+  background-color: #ffffff;
+  color: #333333;
+  font-size: 1rem; /* text-base */
+  font-weight: 400;
+  line-height: 1.5;
+  padding: 0.75rem 1rem;
+  outline: none;
+  transition: border 0.2s ease;
+}
+
+.input:focus,
+.textarea:focus {
+  border-color: #7f13ec;
+  box-shadow: 0 0 0 2px rgba(127,19,236,0.3);
+}
+
+/* Textarea */
+.textarea {
+  resize: vertical;
+  min-height: 4rem;
+}
+
+/* Grid for date/time */
+.grid3 {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .grid3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* File upload */
+.fileUpload {
+  margin-top: 0.5rem;
+  border: 1px dashed #e0e0e0;
+  border-radius: 0.5rem;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+}
+
+.fileUpload .material-symbols-outlined {
+  font-size: 2.5rem;
+  color: #9ca3af; /* gray-400 */
+}
+
+.fileUpload label {
+  cursor: pointer;
+  font-weight: 600;
+  color: #7f13ec;
+}
+
+.fileUpload input {
+  display: none;
+}
+
+/* Buttons */
+.buttonCancel {
+  border-radius: 0.5rem;
+  padding: 0.625rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  background-color: #ffffff;
+  color: #374151; /* gray-700 */
+  border: 1px solid #d1d5db; /* gray-300 */
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.buttonCancel:hover {
+  background-color: #f9fafb; /* gray-50 */
+}
+
+.buttonSubmit {
+  border-radius: 0.5rem;
+  padding: 0.625rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  background-color: #6a1b9a;
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.buttonSubmit:hover {
+  background-color: #5a1682;
+}
