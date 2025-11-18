@@ -1,11 +1,13 @@
+// server.js
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
-import addEventRoute from "./school-event-backend/routes/events.js"; // use .js for ES modules
+import addEventRoute from "./school-event-backend/routes/events.js";
+import attendanceRoute from "./school-event-backend/routes/attendance.js"; // attendance API
 
-// fix __dirname in ES modules
+// Fix __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -22,17 +24,18 @@ app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(express.json());
 
 // Routes
-app.use("/events", addEventRoute);
+app.use("/events", addEventRoute);        // existing events CRUD
+app.use("/events", attendanceRoute);      // attendance init, fetch, toggle
 
-// Static files
+// Serve static files
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(express.static(__dirname));
 
-// 404
+// 404 handler
 app.use((req, res) => res.status(404).json({ error: "Route not found" }));
 
 // MongoDB connection
-const mongoURI = "Your MongoDB Connection String Here";
+const mongoURI = "mongodb+srv://olaluko20_db_user:gwdGNUoQKKcOMJMz@eventmanage.s9gx9lq.mongodb.net/";
 mongoose
   .connect(mongoURI)
   .then(() => console.log("✅ MongoDB Connected"))
