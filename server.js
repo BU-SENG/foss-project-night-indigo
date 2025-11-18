@@ -35,7 +35,7 @@ app.use(express.static(__dirname));
 app.use((req, res) => res.status(404).json({ error: "Route not found" }));
 
 // MongoDB connection
-const mongoURI = "mongodb+srv://olaluko20_db_user:gwdGNUoQKKcOMJMz@eventmanage.s9gx9lq.mongodb.net/";
+const mongoURI = "Input your key here";
 mongoose
   .connect(mongoURI)
   .then(() => console.log("✅ MongoDB Connected"))

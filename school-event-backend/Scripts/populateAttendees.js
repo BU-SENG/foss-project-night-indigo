@@ -4,7 +4,7 @@ import Event from "../models/Event.js";
 import Student from "../models/Students.js"; // adjust filename if your model file is different
 
 // MongoDB connection URI
-const mongoURI = "mongodb+srv://olaluko20_db_user:gwdGNUoQKKcOMJMz@eventmanage.s9gx9lq.mongodb.net/";
+const mongoURI = "mongodb+srv://input login details@eventmanage.s9gx9lq.mongodb.net/";
 
 // Connect to MongoDB
 mongoose.connect(mongoURI)
