@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 
 
 export default function CalendarPage() {
-  const [currentDate, setCurrentDate] = useState(new Date(2024, 9, 15));
+  const [currentDate, setCurrentDate] = useState(new Date(2025, 9, 15));
   const [viewMode, setViewMode] = useState('month');
   const [events, setEvents] = useState({}); // store events by date
 
