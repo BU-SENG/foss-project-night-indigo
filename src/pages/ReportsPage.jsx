@@ -1,18 +1,149 @@
 import Layout from '../components/Layout'
 import styles from './ReportsPage.module.css'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function ReportsPage() {
-  const [reportType, setReportType] = useState('Attendance Summary')
-  const [eventCategory, setEventCategory] = useState('All Categories')
-  const [dateRange, setDateRange] = useState('Last 30 Days')
+  const [dateRange, setDateRange] = useState('This Month')
+  const [events, setEvents] = useState([])
+  const [reportData, setReportData] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [stats, setStats] = useState({
+    totalAttendance: 0,
+    mostPopularEvent: 'N/A',
+    participationRate: 0
+  })
 
-  const reportData = [
-    { event: 'Annual Sports Day', date: 'Oct 15, 2024', organizer: 'Mr. John Smith', category: 'Sports', attendees: 250 },
-    { event: 'Science Fair', date: 'Oct 12, 2024', organizer: 'Ms. Emily White', category: 'Academics', attendees: 120 },
-    { event: 'Drama Club Performance', date: 'Oct 10, 2024', organizer: 'Mrs. Davis', category: 'Arts & Culture', attendees: 85 },
-    { event: 'Inter-School Debate', date: 'Oct 05, 2024', organizer: 'Mr. Robert Brown', category: 'Academics', attendees: 64 },
-  ]
+  // Fetch events from API
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const res = await fetch('http://localhost:5000/events')
+        const data = await res.json()
+        setEvents(data.data || [])
+      } catch (err) {
+        console.error('Error fetching events:', err)
+      }
+    }
+    fetchEvents()
+  }, [])
+
+  // Calculate analytics based on filters
+  const calculateStats = async (eventsData) => {
+    if (eventsData.length === 0) {
+      setStats({
+        totalAttendance: 0,
+        mostPopularEvent: 'N/A',
+        participationRate: 0
+      })
+      setReportData([])
+      return
+    }
+
+    // Filter events by date range
+    const filteredEvents = filterEventsByDateRange(eventsData)
+
+    if (filteredEvents.length === 0) {
+      setStats({
+        totalAttendance: 0,
+        mostPopularEvent: 'N/A',
+        participationRate: 0
+      })
+      setReportData([])
+      return
+    }
+
+    // Fetch attendance stats for each event
+    let totalCheckedIn = 0
+    let totalRegistered = 0
+    let mostPopularEventName = 'N/A'
+    let maxCheckedIn = 0
+
+    const reportDataArray = []
+
+    for (const event of filteredEvents) {
+      try {
+        const res = await fetch(`http://localhost:5000/attendance/${event._id}/stats`)
+        const data = await res.json()
+
+        const eventStats = data.stats || {
+          registered: 0,
+          checkedIn: 0,
+          absent: 0
+        }
+
+        totalCheckedIn += eventStats.checkedIn
+        totalRegistered += eventStats.registered
+
+        // Track most popular event
+        if (eventStats.checkedIn > maxCheckedIn) {
+          maxCheckedIn = eventStats.checkedIn
+          mostPopularEventName = event.title || 'N/A'
+        }
+
+        // Format report data
+        reportDataArray.push({
+          event: event.title,
+          date: new Date(event.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }),
+          organizer: event.organizer || 'Not Specified',
+          category: event.category || 'General',
+          attendees: eventStats.checkedIn,
+          totalSlots: eventStats.registered,
+          absent: eventStats.absent
+        })
+      } catch (err) {
+        console.error(`Error fetching stats for event ${event._id}:`, err)
+      }
+    }
+
+    // Calculate average participation rate
+    const participationRate = totalRegistered > 0 ? Math.round((totalCheckedIn / totalRegistered) * 100) : 0
+
+    setStats({
+      totalAttendance: totalCheckedIn,
+      mostPopularEvent: mostPopularEventName,
+      participationRate: participationRate
+    })
+
+    setReportData(reportDataArray)
+  }
+
+  // Filter events by date range
+  const filterEventsByDateRange = (eventsData) => {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+
+    return eventsData.filter(event => {
+      const eventDate = new Date(event.date)
+      eventDate.setHours(0, 0, 0, 0)
+
+      const daysDiff = Math.floor((today - eventDate) / (1000 * 60 * 60 * 24))
+
+      if (dateRange === 'This Month') {
+        return eventDate.getMonth() === today.getMonth() && eventDate.getFullYear() === today.getFullYear()
+      } else if (dateRange === 'Last Month') {
+        const lastMonth = new Date(today)
+        lastMonth.setMonth(lastMonth.getMonth() - 1)
+        return eventDate.getMonth() === lastMonth.getMonth() && eventDate.getFullYear() === lastMonth.getFullYear()
+      } else if (dateRange === 'Last 30 Days') {
+        return daysDiff >= -30 && daysDiff <= 0
+      } else if (dateRange === 'Custom Range') {
+        return true // For custom range, would need additional date inputs
+      }
+      return true
+    })
+  }
+
+  // Handle generate report button
+  const handleGenerateReport = () => {
+    setLoading(true)
+    calculateStats(events)
+    setLoading(false)
+  }
+
+  // Auto-generate report when page loads or filters change
+  useEffect(() => {
+    calculateStats(events)
+  }, [events, dateRange])
 
   return (
     <Layout>
@@ -36,61 +167,6 @@ export default function ReportsPage() {
             gap: '16px',
             alignItems: 'end',
           }}>
-            {/* Report Type */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <label style={{
-                fontSize: '14px',
-                fontWeight: 500,
-                color: 'var(--text-primary)',
-              }}>Report Type</label>
-              <select
-                value={reportType}
-                onChange={(e) => setReportType(e.target.value)}
-                style={{
-                  padding: '8px 12px',
-                  border: '1px solid var(--border-light)',
-                  borderRadius: 'var(--radius-sm)',
-                  fontSize: '14px',
-                  color: 'var(--text-primary)',
-                  backgroundColor: 'var(--bg-white)',
-                  cursor: 'pointer',
-                  fontFamily: 'var(--font-base)',
-                }}
-              >
-                <option>Attendance Summary</option>
-                <option>Event Popularity</option>
-                <option>Participation by Grade</option>
-              </select>
-            </div>
-
-            {/* Event Category */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <label style={{
-                fontSize: '14px',
-                fontWeight: 500,
-                color: 'var(--text-primary)',
-              }}>Event Category</label>
-              <select
-                value={eventCategory}
-                onChange={(e) => setEventCategory(e.target.value)}
-                style={{
-                  padding: '8px 12px',
-                  border: '1px solid var(--border-light)',
-                  borderRadius: 'var(--radius-sm)',
-                  fontSize: '14px',
-                  color: 'var(--text-primary)',
-                  backgroundColor: 'var(--bg-white)',
-                  cursor: 'pointer',
-                  fontFamily: 'var(--font-base)',
-                }}
-              >
-                <option>All Categories</option>
-                <option>Sports</option>
-                <option>Academics</option>
-                <option>Arts & Culture</option>
-              </select>
-            </div>
-
             {/* Date Range */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <label style={{
@@ -121,30 +197,20 @@ export default function ReportsPage() {
 
             {/* Buttons */}
             <div style={{ display: 'flex', gap: '12px' }}>
-              <button style={{
-                flex: 1,
-                padding: '8px 16px',
-                borderRadius: 'var(--radius-sm)',
-                border: 'none',
-                backgroundColor: 'var(--accent-purple)',
-                color: 'white',
-                cursor: 'pointer',
-                fontSize: '14px',
-                fontWeight: 600,
-              }}>
+              <button
+                onClick={handleGenerateReport}
+                style={{
+                  flex: 1,
+                  padding: '8px 16px',
+                  borderRadius: 'var(--radius-sm)',
+                  border: 'none',
+                  backgroundColor: 'var(--accent-purple)',
+                  color: 'white',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: 600,
+                }}>
                 Generate Report
-              </button>
-              <button style={{
-                padding: '8px 16px',
-                borderRadius: 'var(--radius-sm)',
-                border: '1px solid var(--border-light)',
-                backgroundColor: 'var(--bg-white)',
-                color: 'var(--text-primary)',
-                cursor: 'pointer',
-                fontSize: '14px',
-                fontWeight: 600,
-              }}>
-                Export
               </button>
             </div>
           </div>
@@ -186,7 +252,7 @@ export default function ReportsPage() {
                 Total Attendance this Month
               </p>
               <p style={{ fontSize: '32px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
-                1,428
+                {stats.totalAttendance}
               </p>
             </div>
           </div>
@@ -220,7 +286,7 @@ export default function ReportsPage() {
                 Most Popular Event
               </p>
               <p style={{ fontSize: '24px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
-                Annual Sports Day
+                {stats.mostPopularEvent}
               </p>
             </div>
           </div>
@@ -254,7 +320,7 @@ export default function ReportsPage() {
                 Average Participation Rate
               </p>
               <p style={{ fontSize: '32px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
-                82%
+                {stats.participationRate}%
               </p>
             </div>
           </div>
@@ -272,82 +338,68 @@ export default function ReportsPage() {
               Detailed Event Report
             </h3>
           </div>
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{
-              width: '100%',
-              borderCollapse: 'collapse',
-            }}>
-              <thead>
-                <tr style={{ backgroundColor: 'var(--bg-lighter)' }}>
-                  <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: 700, color: 'var(--text-secondary)', borderBottom: '1px solid var(--border-light)' }}>
-                    EVENT NAME
-                  </th>
-                  <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: 700, color: 'var(--text-secondary)', borderBottom: '1px solid var(--border-light)' }}>
-                    DATE
-                  </th>
-                  <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: 700, color: 'var(--text-secondary)', borderBottom: '1px solid var(--border-light)' }}>
-                    ORGANIZER
-                  </th>
-                  <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: 700, color: 'var(--text-secondary)', borderBottom: '1px solid var(--border-light)' }}>
-                    CATEGORY
-                  </th>
-                  <th style={{ padding: '16px', textAlign: 'right', fontSize: '12px', fontWeight: 700, color: 'var(--text-secondary)', borderBottom: '1px solid var(--border-light)' }}>
-                    ATTENDEES
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {reportData.map((row, idx) => (
-                  <tr key={idx} style={{ backgroundColor: idx % 2 === 0 ? 'var(--bg-white)' : 'var(--bg-lighter)' }}>
-                    <td style={{ padding: '16px', fontSize: '14px', color: 'var(--text-primary)', fontWeight: 500, borderBottom: '1px solid var(--border-light)' }}>
-                      {row.event}
-                    </td>
-                    <td style={{ padding: '16px', fontSize: '14px', color: 'var(--text-secondary)', borderBottom: '1px solid var(--border-light)' }}>
-                      {row.date}
-                    </td>
-                    <td style={{ padding: '16px', fontSize: '14px', color: 'var(--text-secondary)', borderBottom: '1px solid var(--border-light)' }}>
-                      {row.organizer}
-                    </td>
-                    <td style={{ padding: '16px', fontSize: '14px', color: 'var(--text-secondary)', borderBottom: '1px solid var(--border-light)' }}>
-                      {row.category}
-                    </td>
-                    <td style={{ padding: '16px', fontSize: '14px', color: 'var(--text-primary)', fontWeight: 500, textAlign: 'right', borderBottom: '1px solid var(--border-light)' }}>
-                      {row.attendees}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div style={{ padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--border-light)' }}>
-            <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: 0 }}>
-              Showing 1 to 4 of 25 results
-            </p>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <button style={{
-                padding: '8px 12px',
-                border: '1px solid var(--border-light)',
-                borderRadius: 'var(--radius-sm)',
-                backgroundColor: 'var(--bg-white)',
-                cursor: 'pointer',
-                fontSize: '14px',
-                color: 'var(--text-primary)',
-              }}>
-                Previous
-              </button>
-              <button style={{
-                padding: '8px 12px',
-                border: '1px solid var(--border-light)',
-                borderRadius: 'var(--radius-sm)',
-                backgroundColor: 'var(--bg-white)',
-                cursor: 'pointer',
-                fontSize: '14px',
-                color: 'var(--text-primary)',
-              }}>
-                Next
-              </button>
+          {reportData.length === 0 ? (
+            <div style={{ padding: '48px', textAlign: 'center' }}>
+              <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: 0 }}>
+                No events found for the selected filters. Click "Generate Report" to load data.
+              </p>
             </div>
-          </div>
+          ) : (
+            <>
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{
+                  width: '100%',
+                  borderCollapse: 'collapse',
+                }}>
+                  <thead>
+                    <tr style={{ backgroundColor: 'var(--bg-lighter)' }}>
+                      <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: 700, color: 'var(--text-secondary)', borderBottom: '1px solid var(--border-light)' }}>
+                        EVENT NAME
+                      </th>
+                      <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: 700, color: 'var(--text-secondary)', borderBottom: '1px solid var(--border-light)' }}>
+                        DATE
+                      </th>
+                      <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: 700, color: 'var(--text-secondary)', borderBottom: '1px solid var(--border-light)' }}>
+                        ORGANIZER
+                      </th>
+                      <th style={{ padding: '16px', textAlign: 'left', fontSize: '12px', fontWeight: 700, color: 'var(--text-secondary)', borderBottom: '1px solid var(--border-light)' }}>
+                        CATEGORY
+                      </th>
+                      <th style={{ padding: '16px', textAlign: 'right', fontSize: '12px', fontWeight: 700, color: 'var(--text-secondary)', borderBottom: '1px solid var(--border-light)' }}>
+                        ATTENDANCE
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {reportData.map((row, idx) => (
+                      <tr key={idx} style={{ backgroundColor: idx % 2 === 0 ? 'var(--bg-white)' : 'var(--bg-lighter)' }}>
+                        <td style={{ padding: '16px', fontSize: '14px', color: 'var(--text-primary)', fontWeight: 500, borderBottom: '1px solid var(--border-light)' }}>
+                          {row.event}
+                        </td>
+                        <td style={{ padding: '16px', fontSize: '14px', color: 'var(--text-secondary)', borderBottom: '1px solid var(--border-light)' }}>
+                          {row.date}
+                        </td>
+                        <td style={{ padding: '16px', fontSize: '14px', color: 'var(--text-secondary)', borderBottom: '1px solid var(--border-light)' }}>
+                          {row.organizer}
+                        </td>
+                        <td style={{ padding: '16px', fontSize: '14px', color: 'var(--text-secondary)', borderBottom: '1px solid var(--border-light)' }}>
+                          {row.category}
+                        </td>
+                        <td style={{ padding: '16px', fontSize: '14px', color: 'var(--text-primary)', fontWeight: 500, textAlign: 'right', borderBottom: '1px solid var(--border-light)' }}>
+                          {row.attendees}/{row.totalSlots}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div style={{ padding: '16px', display: 'flex', justifyContent: 'flex-start', borderTop: '1px solid var(--border-light)' }}>
+                <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: 0 }}>
+                  Showing {reportData.length} of {reportData.length} results
+                </p>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </Layout>

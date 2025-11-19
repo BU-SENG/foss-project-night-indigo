@@ -1,19 +1,34 @@
 import Layout from '../components/Layout'
 import styles from './SettingsPage.module.css'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('Personal Information')
+  const [user, setUser] = useState(null)
   const [formData, setFormData] = useState({
-    fullName: 'Maria Rodriguez',
-    email: 'maria.rodriguez@school.edu',
-    phone: '(123) 456-7890',
+    fullName: '',
+    email: '',
+    phone: '',
   })
   const [notificationSettings, setNotificationSettings] = useState({
     emailNotifications: true,
     eventReminders: true,
     newEventAlerts: false,
   })
+
+  // Fetch user data from localStorage on component mount
+  useEffect(() => {
+    const userData = localStorage.getItem('user')
+    if (userData) {
+      const parsedUser = JSON.parse(userData)
+      setUser(parsedUser)
+      setFormData({
+        fullName: parsedUser.fullName || '',
+        email: parsedUser.email || '',
+        phone: parsedUser.phone || '',
+      })
+    }
+  }, [])
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -22,6 +37,15 @@ export default function SettingsPage() {
 
   const handleToggle = (setting) => {
     setNotificationSettings((prev) => ({ ...prev, [setting]: !prev[setting] }))
+  }
+
+  const handleSavePersonalInfo = () => {
+    if (user) {
+      const updatedUser = { ...user, ...formData }
+      localStorage.setItem('user', JSON.stringify(updatedUser))
+      setUser(updatedUser)
+      alert('Profile updated successfully!')
+    }
   }
 
   return (
@@ -86,10 +110,17 @@ export default function SettingsPage() {
                       width: '96px',
                       height: '96px',
                       borderRadius: '50%',
-                      backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuA0u1LAdaXusQHflfomdncgyxVDjXcJCDRi73IB9P7QqEgyl-0GWXr6WiW-Sf4cWT21PS2GR3s2QocGskXbpO2NMR-V4cp96JepfW0qTK6LhZcp1fBAR-NaOUtuTPhCL0nuqVJzJMmTFyFCJK8jcmBXuZyDKyE6nEgw2GCRZKkOja4no0y05OUxd6fP_rb18WeZQoSV2pWSgJyV0opv8VvH4teGSRlS1NgEo8oTCLbwxWTvo5HVXxHHI3kQybKnKJcktGXhlfIAxuo")',
+                      backgroundImage: user?.profilePictureUrl ? `url("${user.profilePictureUrl}")` : 'none',
+                      backgroundColor: user?.profilePictureUrl ? 'transparent' : '#e5e7eb',
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
-                    }} />
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '40px',
+                    }}>
+                      {!user?.profilePictureUrl && '👤'}
+                    </div>
                     <div>
                       <p style={{
                         margin: 0,
@@ -105,7 +136,7 @@ export default function SettingsPage() {
                         fontSize: '14px',
                         color: 'var(--text-secondary)',
                       }}>
-                        Update your profile picture.
+                        {user?.fullName || 'Update your profile'}
                       </p>
                     </div>
                   </div>
@@ -217,7 +248,9 @@ export default function SettingsPage() {
                   }}>
                     Cancel
                   </button>
-                  <button style={{
+                  <button
+                    onClick={handleSavePersonalInfo}
+                    style={{
                     padding: '10px 20px',
                     borderRadius: 'var(--radius-sm)',
                     border: 'none',

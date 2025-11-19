@@ -6,7 +6,6 @@ import multer from "multer";
 import path from "path";
 
 const router = express.Router();
-console.log("🔥 EVENTS ROUTER FILE LOADED");
 
 // ----------------- MULTER CONFIG -----------------
 const storage = multer.diskStorage({
@@ -23,16 +22,21 @@ router.post("/addevents", upload.single("file-upload"), async (req, res) => {
     const { title, date, startTime, endTime, location, description } = req.body;
     const file = req.file;
 
+    // Validate required fields
+    if (!title || !date) {
+      return res.status(400).json({ error: "Title and date are required" });
+    }
+
     // 1. Fetch all students
     const students = await Student.find({}, "_id");
 
     // 2. Pre-fill attendees array
     const attendees = students.map(s => ({ studentId: s._id, status: "absent" }));
 
-    // 3. Create event
+    // 3. Create event - convert date string to proper Date object
     const newEvent = new Event({
       title,
-      date,
+      date: new Date(date), // Convert string to Date
       startTime,
       endTime,
       location,
@@ -44,8 +48,7 @@ router.post("/addevents", upload.single("file-upload"), async (req, res) => {
     await newEvent.save();
     res.json({ message: "Event added successfully", data: newEvent });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to save event" });
+    res.status(500).json({ error: "Failed to save event", details: err.message });
   }
 });
 
@@ -53,9 +56,8 @@ router.post("/addevents", upload.single("file-upload"), async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const events = await Event.find().sort({ date: -1 });
-    res.json({ data: events });
-  } catch (err) {
-    console.error(err);
+    res.json({ message: "Events retrieved successfully", data: events });
+  } catch {
     res.status(500).json({ error: "Failed to fetch events" });
   }
 });
@@ -65,9 +67,8 @@ router.get("/upcoming", async (req, res) => {
   try {
     const today = new Date();
     const events = await Event.find({ date: { $gte: today.toISOString().split("T")[0] } }).sort({ date: 1 });
-    res.json({ data: events });
-  } catch (err) {
-    console.error(err);
+    res.json({ message: "Upcoming events retrieved successfully", data: events });
+  } catch {
     res.status(500).json({ error: "Failed to fetch upcoming events" });
   }
 });
@@ -79,11 +80,10 @@ router.get("/:id", async (req, res) => {
       "attendees.studentId",
       "name studentId class email"
     );
-    if (!event) return res.status(404).json({ message: "Event not found" });
-    res.json({ data: event });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Failed to fetch event" });
+    if (!event) return res.status(404).json({ error: "Event not found" });
+    res.json({ message: "Event retrieved successfully", data: event });
+  } catch {
+    res.status(500).json({ error: "Failed to fetch event" });
   }
 });
 
@@ -99,12 +99,11 @@ router.put("/:id/attend", async (req, res) => {
       { new: true }
     );
 
-    if (!updatedEvent) return res.status(404).json({ message: "Event or student not found" });
+    if (!updatedEvent) return res.status(404).json({ error: "Event or student not found" });
 
     res.json({ message: "Student marked present", data: updatedEvent });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Failed to mark attendance" });
+  } catch {
+    res.status(500).json({ error: "Failed to mark attendance" });
   }
 });
 
@@ -115,24 +114,22 @@ router.put("/:id", upload.single("file-upload"), async (req, res) => {
     if (req.file) updateData.filePath = req.file.path;
 
     const updatedEvent = await Event.findByIdAndUpdate(req.params.id, updateData, { new: true });
-    res.json({ message: "Event updated", data: updatedEvent });
-  } catch (err) {
-    console.error(err);
+    if (!updatedEvent) return res.status(404).json({ error: "Event not found" });
+    res.json({ message: "Event updated successfully", data: updatedEvent });
+  } catch {
     res.status(500).json({ error: "Failed to update event" });
   }
 });
 
 // DELETE /events/:id - delete event
 router.delete("/:id", async (req, res) => {
-  console.log("💥 DELETE request received for ID:", req.params.id);
   try {
     const { id } = req.params;
     const deletedEvent = await Event.findByIdAndDelete(id);
-    if (!deletedEvent) return res.status(404).json({ message: "Event not found" });
-    res.json({ message: "Event deleted successfully" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Failed to delete event" });
+    if (!deletedEvent) return res.status(404).json({ error: "Event not found" });
+    res.json({ message: "Event deleted successfully", data: deletedEvent });
+  } catch {
+    res.status(500).json({ error: "Failed to delete event" });
   }
 });
 

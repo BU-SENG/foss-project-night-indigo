@@ -33,7 +33,7 @@ export default function AddEventPage() {
       payload.append("endTime", formData.endTime);
       payload.append("location", formData.location);
       payload.append("description", formData.description);
-      if (formData.file) payload.append("file", formData.file);
+      if (formData.file) payload.append("file-upload", formData.file);
 
       const response = await fetch("http://localhost:5000/events/addevents", {
         method: "POST",
@@ -44,7 +44,6 @@ export default function AddEventPage() {
 
       const result = await response.json();
       alert(result.message);
-      console.log("Server Response:", result);
 
       // Optional: clear form
       setFormData({
@@ -57,7 +56,6 @@ export default function AddEventPage() {
         file: null,
       });
     } catch (err) {
-      console.error(err);
       alert("Error adding event");
     }
   };

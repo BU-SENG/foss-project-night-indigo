@@ -1,8 +1,9 @@
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import styles from './Sidebar.module.css'
 
 export default function Sidebar() {
   const location = useLocation()
+  const navigate = useNavigate()
 
   const navItems = [
     { path: '/dashboard', label: 'Dashboard', icon: 'dashboard' },
@@ -14,11 +15,19 @@ export default function Sidebar() {
     { path: '/settings', label: 'Settings', icon: 'settings' },
   ]
 
+  const handleLogout = () => {
+    // Clear auth data from localStorage
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
+    // Redirect to login page
+    navigate('/login')
+  }
+
   return (
     <aside className={styles.sidebar}>
       <div className={styles.logo}>
         <span className={`material-symbols-outlined ${styles.logoIcon}`}>school</span>
-        <h1 className={styles.logoText}>Smart School Event System</h1>
+        <h1 className={styles.logoText}>Smart School</h1>
       </div>
 
       <nav className={styles.nav}>
@@ -35,10 +44,11 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      <button className={styles.logoutButton}>
+      <button className={styles.logoutButton} onClick={handleLogout}>
         <span className={`material-symbols-outlined ${styles.logoutIcon}`}>logout</span>
         <span>Logout</span>
       </button>
     </aside>
   )
 }
+

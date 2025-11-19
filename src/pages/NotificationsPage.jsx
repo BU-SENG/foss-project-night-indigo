@@ -1,49 +1,117 @@
 import Layout from '../components/Layout'
 import styles from './NotificationsPage.module.css'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 export default function NotificationsPage() {
   const [filter, setFilter] = useState('All')
   const [selectedNotification, setSelectedNotification] = useState(0)
+  const [events, setEvents] = useState([])
+  const [notifications, setNotifications] = useState([])
+  const navigate = useNavigate()
 
-  const notifications = [
-    {
-      id: 1,
-      icon: '📅',
-      title: 'Science Fair Location Change',
-      description: 'The location for the upcoming Science Fair has been changed to the Main Auditorium.',
-      timestamp: '5m ago',
-      category: 'Event Updates',
-      isRead: false,
-    },
-    {
-      id: 2,
-      icon: '🎉',
-      title: 'New Event: Annual Sports Day',
-      description: 'Get ready for a day of fun and competition! The Annual Sports Day is scheduled for next month.',
-      timestamp: '2h ago',
-      category: 'Event Updates',
-      isRead: false,
-    },
-    {
-      id: 3,
-      icon: '📢',
-      title: 'Reminder: School Assembly Tomorrow',
-      description: 'A special assembly will be held tomorrow morning at 9 AM in the main hall.',
-      timestamp: 'Yesterday',
-      category: 'Reminders',
-      isRead: true,
-    },
-    {
-      id: 4,
-      icon: '⚠️',
-      title: 'Urgent: School Closure Notice',
-      description: 'Due to unforeseen circumstances, the school will remain closed on Friday, Oct 27th.',
-      timestamp: '2 days ago',
-      category: 'Event Updates',
-      isRead: true,
-    },
-  ]
+  // Fetch events from API
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const res = await fetch('http://localhost:5000/events')
+        const data = await res.json()
+        setEvents(data.data || [])
+      } catch (err) {
+        console.error('Error fetching events:', err)
+      }
+    }
+    fetchEvents()
+  }, [])
+
+  // Generate notifications from events
+  useEffect(() => {
+    const generateNotifications = () => {
+      if (!events || events.length === 0) return
+
+      const now = new Date()
+      const generatedNotifications = events.map((event, idx) => {
+        const eventDate = new Date(event.date)
+        const startTime = event.startTime ? `${event.startTime}` : '12:00 PM'
+
+        // Create a date string for comparison
+        const todayDate = new Date()
+        todayDate.setHours(0, 0, 0, 0)
+        const eventDateOnly = new Date(eventDate)
+        eventDateOnly.setHours(0, 0, 0, 0)
+
+        const daysUntilEvent = Math.floor((eventDateOnly - todayDate) / (1000 * 60 * 60 * 24))
+
+        let timestamp = ''
+        let title = ''
+        let description = ''
+        let icon = '📅'
+        let isRead = false
+
+        if (daysUntilEvent === 0) {
+          // Event is today
+          title = `🔔 Event Today: ${event.title}`
+          description = `${event.title} is scheduled for today at ${startTime}. Location: ${event.location || 'TBD'}`
+          timestamp = 'Today'
+          icon = '🔔'
+          isRead = false // Mark as unread for today's events
+        } else if (daysUntilEvent === 1) {
+          // Event is tomorrow
+          title = `📢 Reminder: ${event.title} Tomorrow`
+          description = `${event.title} is scheduled for tomorrow at ${startTime}. Make sure to attend!`
+          timestamp = 'Tomorrow'
+          icon = '📢'
+          isRead = false
+        } else if (daysUntilEvent > 1 && daysUntilEvent <= 7) {
+          // Event is within a week
+          title = `📅 Upcoming Event: ${event.title}`
+          description = `${event.title} is coming up in ${daysUntilEvent} days at ${startTime}. Location: ${event.location || 'TBD'}`
+          timestamp = `in ${daysUntilEvent} days`
+          icon = '📅'
+          isRead = true
+        } else if (daysUntilEvent < 0) {
+          // Event has passed
+          const daysPassed = Math.abs(daysUntilEvent)
+          title = `✓ Event Completed: ${event.title}`
+          description = `${event.title} has been completed. Thank you for attending!`
+          timestamp = `${daysPassed}d ago`
+          icon = '✓'
+          isRead = true
+        } else {
+          // Event is more than a week away
+          title = `📌 Scheduled Event: ${event.title}`
+          description = `${event.title} is scheduled for ${eventDate.toLocaleDateString()} at ${startTime}. Mark your calendar!`
+          timestamp = `${daysUntilEvent}d away`
+          icon = '📌'
+          isRead = true
+        }
+
+        return {
+          id: event._id || idx,
+          eventId: event._id,
+          icon: icon,
+          title: title,
+          description: description,
+          timestamp: timestamp,
+          category: daysUntilEvent === 0 || daysUntilEvent === 1 ? 'Reminders' : 'Event Updates',
+          isRead: isRead,
+          eventDate: eventDate,
+          daysUntilEvent: daysUntilEvent
+        }
+      })
+
+      // Sort by days until event (upcoming first, then completed)
+      generatedNotifications.sort((a, b) => {
+        if (a.daysUntilEvent < 0 && b.daysUntilEvent >= 0) return 1
+        if (a.daysUntilEvent >= 0 && b.daysUntilEvent < 0) return -1
+        return a.daysUntilEvent - b.daysUntilEvent
+      })
+
+      setNotifications(generatedNotifications)
+    }
+
+    generateNotifications()
+  }, [events])
 
   const filteredNotifications = filter === 'All'
     ? notifications
@@ -52,6 +120,28 @@ export default function NotificationsPage() {
       : notifications.filter((n) => n.category === filter)
 
   const currentNotification = filteredNotifications[selectedNotification] || filteredNotifications[0]
+
+  // Handle mark all as read
+  const handleMarkAllAsRead = () => {
+    setNotifications(notifications.map(n => ({ ...n, isRead: true })))
+  }
+
+  // Handle mark single notification as read
+  const handleMarkAsRead = () => {
+    if (currentNotification) {
+      setNotifications(notifications.map(n =>
+        n.id === currentNotification.id ? { ...n, isRead: true } : n
+      ))
+    }
+  }
+
+  // Handle view details - navigate to event page
+  const handleViewDetails = () => {
+    if (currentNotification && currentNotification.eventId) {
+      navigate('/events')
+      // Optionally, you could pass state to highlight the event, but for now navigate to events page
+    }
+  }
 
   return (
     <Layout>
@@ -82,7 +172,9 @@ export default function NotificationsPage() {
               <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)' }}>
                 Notifications
               </h3>
-              <button style={{
+              <button
+                onClick={handleMarkAllAsRead}
+                style={{
                 padding: '6px 12px',
                 borderRadius: 'var(--radius-sm)',
                 border: 'none',
@@ -285,7 +377,9 @@ export default function NotificationsPage() {
               </div>
 
               <div style={{ display: 'flex', gap: '12px', marginTop: 'auto' }}>
-                <button style={{
+                <button
+                  onClick={handleMarkAsRead}
+                  style={{
                   flex: 1,
                   padding: '12px 16px',
                   borderRadius: 'var(--radius-sm)',
@@ -298,7 +392,9 @@ export default function NotificationsPage() {
                 }}>
                   ✓ Mark as Read
                 </button>
-                <button style={{
+                <button
+                  onClick={handleViewDetails}
+                  style={{
                   flex: 1,
                   padding: '12px 16px',
                   borderRadius: 'var(--radius-sm)',

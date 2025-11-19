@@ -14,7 +14,12 @@ const eventSchema = new mongoose.Schema({
   location: String,
   description: String,
   filePath: String,
-  attendees: [attendeeSchema]
+  attendees: [attendeeSchema],
+  attendanceStats: {
+    registered: { type: Number, default: 0 },
+    checkedIn: { type: Number, default: 0 },
+    absent: { type: Number, default: 0 }
+  }
 });
 
 // ✅ Check if model already exists, otherwise create

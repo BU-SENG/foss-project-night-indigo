@@ -5,111 +5,147 @@ import styles from './EventAttendancePage.module.css';
 export default function EventAttendancePage() {
   const [events, setEvents] = useState([]);
   const [selectedEventId, setSelectedEventId] = useState('');
-  const [students, setStudents] = useState([]);
+  const [registeredInput, setRegisteredInput] = useState('');
+  const [checkedInInput, setCheckedInInput] = useState('');
   const [stats, setStats] = useState({
+    registered: 0,
     checkedIn: 0,
     absent: 0,
-    total: 0,
-    percentage: '0%',
   });
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
 
-  // -----------------------------
-  // Fetch all events
-  // -----------------------------
+  // Fetch all events - ONLY from online database
   useEffect(() => {
     async function fetchEvents() {
       try {
         const res = await fetch('http://localhost:5000/events');
         const data = await res.json();
-        setEvents(Array.isArray(data) ? data : data.data || []);
+        const eventsList = Array.isArray(data) ? data : data.data || [];
+        setEvents(eventsList);
+
+        // Do NOT use localStorage - keep state only in memory
       } catch (err) {
-        console.error("Error fetching events:", err);
       }
     }
     fetchEvents();
   }, []);
 
-  // -----------------------------
-  // Fetch attendees for selected event
-  // -----------------------------
+  // Fetch attendance stats for selected event
   useEffect(() => {
     if (!selectedEventId) {
-      setStudents([]);
-      setStats({ checkedIn: 0, absent: 0, total: 0, percentage: '0%' });
+      setStats({ registered: 0, checkedIn: 0, absent: 0 });
+      setRegisteredInput('');
+      setCheckedInInput('');
       return;
     }
 
-    async function fetchAttendance() {
+    async function fetchAttendanceStats() {
       try {
-        const res = await fetch(`http://localhost:5000/events/${selectedEventId}`);
+        const res = await fetch(`http://localhost:5000/attendance/${selectedEventId}/stats`);
         const data = await res.json();
 
-        console.log("Fetched event data:", data); // Debug
+        if (!res.ok) {
+          setMessage(`❌ Error: ${data.error || data.message}`);
+          return;
+        }
 
-        const attendees = data?.data?.attendees || [];
-        const list = attendees.map(a => ({
-          id: a.studentId?._id || "",
-          name: a.studentId?.name || "Unknown",
-          status: a.status ? a.status.charAt(0).toUpperCase() + a.status.slice(1) : "Absent",
-        }));
-
-        setStudents(list);
-
-        const checkedIn = list.filter(s => s.status === 'Present').length;
-        const total = list.length;
-        const absent = total - checkedIn;
-        const percentage = total > 0 ? `${Math.round((checkedIn / total) * 100)}%` : '0%';
-        setStats({ checkedIn, absent, total, percentage });
+        if (data.stats) {
+          setStats(data.stats);
+          setRegisteredInput(data.stats.registered);
+          setCheckedInInput(data.stats.checkedIn);
+          setMessage('');
+        } else {
+          setMessage('❌ Invalid response format from server');
+        }
       } catch (err) {
-        console.error("Error fetching attendance:", err);
       }
     }
 
-    fetchAttendance();
+    fetchAttendanceStats();
   }, [selectedEventId]);
 
-  // -----------------------------
-  // Toggle attendance
-  // -----------------------------
-  const toggleAttendance = async (studentId) => {
+  // Handle registered input change
+  const handleRegisteredChange = (e) => {
+    const value = e.target.value === '' ? '' : parseInt(e.target.value, 10);
+    setRegisteredInput(value);
+  };
+
+  // Handle checked-in input change
+  const handleCheckedInChange = (e) => {
+    const value = e.target.value === '' ? '' : parseInt(e.target.value, 10);
+    setCheckedInInput(value);
+  };
+
+  // Save attendance stats
+  const handleSaveAttendance = async () => {
+    setMessage('');
+
+    // Validation
+    if (registeredInput === '' || checkedInInput === '') {
+      setMessage('❌ Please enter both registered and checked-in counts');
+      return;
+    }
+
+    const registered = parseInt(registeredInput, 10);
+    const checkedIn = parseInt(checkedInInput, 10);
+
+    // Validate parsing
+    if (isNaN(registered) || isNaN(checkedIn)) {
+      setMessage('❌ Please enter valid numbers');
+      return;
+    }
+
+    if (registered < 0 || checkedIn < 0) {
+      setMessage('❌ Numbers cannot be negative');
+      return;
+    }
+
+    if (checkedIn > registered) {
+      setMessage('❌ Checked-in cannot be more than registered');
+      return;
+    }
+
+    setLoading(true);
+
     try {
-      const student = students.find(s => s.id === studentId);
-      if (!student) return;
-
-      const newStatus = student.status === 'Present' ? 'Absent' : 'Present';
-
-      // Update backend
-      await fetch(`http://localhost:5000/events/${selectedEventId}/attend`, {
+      const res = await fetch(`http://localhost:5000/attendance/${selectedEventId}/stats`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ studentId, status: newStatus.toLowerCase() }),
+        body: JSON.stringify({ registered, checkedIn }),
       });
 
-      // Update frontend
-      const updated = students.map(s =>
-        s.id === studentId ? { ...s, status: newStatus } : s
-      );
-      setStudents(updated);
+      const data = await res.json();
 
-      const checkedIn = updated.filter(s => s.status === 'Present').length;
-      const total = updated.length;
-      const absent = total - checkedIn;
-      const percentage = total > 0 ? `${Math.round((checkedIn / total) * 100)}%` : '0%';
-      setStats({ checkedIn, absent, total, percentage });
+      if (!res.ok) {
+        const errorMsg = data.error || data.message || 'Failed to save attendance';
+        setMessage(`❌ ${errorMsg}`);
+        setLoading(false);
+        return;
+      }
+
+      // Update local state with response data
+      if (data.stats) {
+        setStats(data.stats);
+      } else {
+        const absent = registered - checkedIn;
+        setStats({ registered, checkedIn, absent });
+      }
+
+      setMessage('✓ Attendance data saved successfully');
+      setLoading(false);
     } catch (err) {
-      console.error("Error updating attendance:", err);
+      setMessage(`❌ Error saving attendance: ${err.message}`);
+      setLoading(false);
     }
   };
 
-  // -----------------------------
-  // Render
-  // -----------------------------
   return (
     <Layout>
       <div className={styles.container}>
         <div className={styles.header}>
           <h1 className={styles.title}>Event Attendance</h1>
-          <p className={styles.subtitle}>Track attendance for school events.</p>
+          <p className={styles.subtitle}>Track and manage attendance for school events.</p>
         </div>
 
         {/* Event Selector */}
@@ -129,59 +165,133 @@ export default function EventAttendancePage() {
           </select>
         </div>
 
-        {/* Stats */}
-        <div className={styles.statsGrid}>
-          <div className={styles.statCard}>
-            <p className={styles.statLabel}>Checked In</p>
-            <p className={styles.statValue}>{stats.checkedIn}</p>
-          </div>
-          <div className={styles.statCard}>
-            <p className={styles.statLabel}>Absent</p>
-            <p className={styles.statValue}>{stats.absent}</p>
-          </div>
-          <div className={styles.statCard}>
-            <p className={styles.statLabel}>Total Registered</p>
-            <p className={styles.statValue}>{stats.total}</p>
-          </div>
-          <div className={styles.statCard}>
-            <p className={styles.statLabel}>Attendance</p>
-            <p className={styles.statValue}>{stats.percentage}</p>
-          </div>
-        </div>
+        {selectedEventId && (
+          <>
+            {/* Input Section */}
+            <div style={{
+              backgroundColor: 'var(--bg-white)',
+              borderRadius: 'var(--radius-md)',
+              border: '1px solid var(--border-light)',
+              padding: '24px',
+              marginBottom: '24px',
+            }}>
+              <h2 style={{ marginTop: 0, marginBottom: '20px', fontSize: '18px', fontWeight: 600 }}>
+                Attendance Input
+              </h2>
 
-        {/* Student List */}
-        <div className={styles.listContainer}>
-          <div className={styles.listHeader}>
-            <h2>Student Attendance List</h2>
-          </div>
+              {message && (
+                <div style={{
+                  padding: '12px 16px',
+                  borderRadius: '6px',
+                  marginBottom: '16px',
+                  backgroundColor: message.includes('✓') ? '#dcfce7' : '#fee2e2',
+                  color: message.includes('✓') ? '#166534' : '#dc2626',
+                  fontSize: '14px',
+                }}>
+                  {message}
+                </div>
+              )}
 
-          {!selectedEventId && <p style={{ color: "#888" }}>Select an event to view attendance.</p>}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px' }}>
+                {/* Registered Input */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <label style={{
+                    fontSize: '14px',
+                    fontWeight: 600,
+                    color: 'var(--text-primary)',
+                  }}>
+                    Total Registered
+                  </label>
+                  <input
+                    type="number"
+                    value={registeredInput}
+                    onChange={handleRegisteredChange}
+                    placeholder="Enter number of registered attendees"
+                    min="0"
+                    style={{
+                      padding: '12px',
+                      border: '1px solid var(--border-light)',
+                      borderRadius: 'var(--radius-sm)',
+                      fontSize: '14px',
+                      fontFamily: 'var(--font-base)',
+                    }}
+                  />
+                </div>
 
-          {selectedEventId && students.map((student) => (
-            <div key={student.id} className={styles.listRow}>
-              <div style={{ flex: 1 }}>
-                <p style={{ fontWeight: 500, margin: 0 }}>{student.name}</p>
-                <p style={{ fontSize: '12px', color: '#666', margin: '4px 0 0 0'}}>ID: {student.id}</p>
+                {/* Checked-In Input */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <label style={{
+                    fontSize: '14px',
+                    fontWeight: 600,
+                    color: 'var(--text-primary)',
+                  }}>
+                    Checked In
+                  </label>
+                  <input
+                    type="number"
+                    value={checkedInInput}
+                    onChange={handleCheckedInChange}
+                    placeholder="Enter number checked in"
+                    min="0"
+                    style={{
+                      padding: '12px',
+                      border: '1px solid var(--border-light)',
+                      borderRadius: 'var(--radius-sm)',
+                      fontSize: '14px',
+                      fontFamily: 'var(--font-base)',
+                    }}
+                  />
+                </div>
               </div>
 
+              {/* Save Button */}
               <button
-                onClick={() => toggleAttendance(student.id)}
+                onClick={handleSaveAttendance}
+                disabled={loading}
                 style={{
-                  minWidth: '100px',
-                  padding: '6px 10px',
-                  borderRadius: '9999px',
+                  padding: '10px 20px',
+                  borderRadius: 'var(--radius-sm)',
                   border: 'none',
-                  cursor: 'pointer',
+                  backgroundColor: loading ? '#d4d4d8' : 'var(--accent-purple)',
+                  color: 'white',
+                  cursor: loading ? 'not-allowed' : 'pointer',
+                  fontSize: '14px',
                   fontWeight: 600,
-                  backgroundColor: student.status === 'Present' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-                  color: student.status === 'Present' ? '#10B981' : '#EF4444',
                 }}
               >
-                {student.status}
+                {loading ? 'Saving...' : 'Save Attendance Data'}
               </button>
             </div>
-          ))}
-        </div>
+
+            {/* Stats Display */}
+            <div className={styles.statsGrid}>
+              <div className={styles.statCard}>
+                <p className={styles.statLabel}>Total Registered</p>
+                <p className={styles.statValue}>{stats.registered}</p>
+              </div>
+              <div className={styles.statCard}>
+                <p className={styles.statLabel}>Checked In</p>
+                <p className={styles.statValue} style={{ color: '#10B981' }}>{stats.checkedIn}</p>
+              </div>
+              <div className={styles.statCard}>
+                <p className={styles.statLabel}>Absent</p>
+                <p className={styles.statValue} style={{ color: '#EF4444' }}>{stats.absent}</p>
+              </div>
+              <div className={styles.statCard}>
+                <p className={styles.statLabel}>Attendance Rate</p>
+                <p className={styles.statValue}>
+                  {stats.registered > 0 ? `${Math.round((stats.checkedIn / stats.registered) * 100)}%` : '0%'}
+                </p>
+              </div>
+            </div>
+          </>
+        )}
+
+        {!selectedEventId && (
+          <p style={{ color: '#888', textAlign: 'center', marginTop: '40px' }}>
+            Select an event to enter attendance data
+          </p>
+        )}
       </div>
     </Layout>
   );
